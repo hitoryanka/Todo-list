@@ -1,36 +1,21 @@
-import { Isubtask } from "@/lib/initialTasks";
-import TaskNav from "./task-nav";
-import TaskProgress from "./task-progress";
-import TaskTitle from "./task-title";
+import { Isubtask } from '@/lib/initialTasks';
+import TaskNav from './task-nav';
+import TaskProgress from './task-progress';
+import TaskTitle from './task-title';
+import { useContext } from 'react';
+import { TaskContext } from '../page';
+import Description from './task-description';
 
-interface Props {
-  important: boolean;
-  title: string;
-  description: string;
-  subtasks: Isubtask[];
-}
-
-export default function Task({
-  important,
-  title,
-  description,
-  subtasks,
-}: Props) {
+export default function Task() {
+  const { important, title, description, subtasks } = useContext(TaskContext);
   return (
     <section className="mt-5 mx-3 px-5">
       <TaskNav />
       <main>
-        <TaskTitle
-          important={important}
-          title={title}
-        />
-        {subtasks.length ? <TaskProgress subtasks={subtasks} /> : ""}
-        <h2 className="text-white text-3xl mt-[35px]">Description</h2>
-        {description ? (
-          <p className="text-gray-400 text-xl mt-[20px]">{description}</p>
-        ) : (
-          "provide description to a task"
-        )}
+        <TaskTitle />
+        {/* TODO if there's no subtasks - change progress bar to a 'Done' button */}
+        {subtasks.length ? <TaskProgress subtasks={subtasks} /> : ''}
+        <Description />
       </main>
     </section>
   );

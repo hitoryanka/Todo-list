@@ -1,17 +1,31 @@
-"use client";
+'use client';
 
-import Image from "next/image";
-import { Isubtask } from "@/lib/initialTasks";
-import { useState } from "react";
-import editPNG from "../../../images/edit.png";
+import Image from 'next/image';
+import { Isubtask } from '@/lib/initialTasks';
+import { useState } from 'react';
+import editPNG from '../../../images/edit.png';
+import { useDispatch } from 'react-redux';
+import {
+  upadteSubtaskTitle,
+  updateSubtaskStatus,
+} from '@/redux-toolkit/features/tasks/taskSlice';
 
 interface Props {
   task: Isubtask;
   onCheck: Function;
   removeTask: Function;
+  parentTaskId: string;
 }
-export default function Subtask({ task, onCheck, removeTask }: Props) {
-  const [isEditing, setIsEditing] = useState(false);
+export default function Subtask({
+  task,
+  onCheck,
+  removeTask,
+  parentTaskId,
+}: Props) {
+  const dispatch = useDispatch();
+  const [isEditing, setIsEditing] = useState(
+    task.description == 'create title' ? true : false
+  );
   const [currentDescription, setCurrentDescription] = useState(
     task.description
   );
@@ -19,9 +33,37 @@ export default function Subtask({ task, onCheck, removeTask }: Props) {
   function handleBlur() {
     setIsEditing(!isEditing);
 
-    if (currentDescription === "") {
+    if (currentDescription === '') {
       removeTask(task.id);
     }
+  }
+  // BUG put this function into utils folder
+  function handleKeyPress(key: string) {
+    if (key === 'Escape' || key === 'Enter') {
+      setIsEditing(false);
+    }
+  }
+
+  function handleTaskTitleChange(value: string) {
+    setCurrentDescription(value);
+    dispatch(
+      upadteSubtaskTitle({
+        id: parentTaskId,
+        subtaskId: task.id,
+        title: currentDescription,
+      })
+    );
+  }
+
+  function handleTaskDone() {
+    onCheck(task.id);
+    dispatch(
+      updateSubtaskStatus({
+        id: parentTaskId,
+        subtaskId: task.id,
+        done: !task.done,
+      })
+    );
   }
 
   return (
@@ -33,7 +75,7 @@ export default function Subtask({ task, onCheck, removeTask }: Props) {
         <input
           type="checkbox"
           checked={task.done}
-          onChange={() => onCheck(task.id)}
+          onChange={handleTaskDone}
           className="appearance-none bg-gray-200 checked:bg-yellow-300 w-8 h-8 rounded-full "
         />
         {/* TODO crossing out animation */}
@@ -45,10 +87,10 @@ export default function Subtask({ task, onCheck, removeTask }: Props) {
         ) : (
           <input
             type="text"
-            // TODO blur on Enter/Esc key press
             onBlur={handleBlur}
             value={currentDescription}
-            onChange={({ target }) => setCurrentDescription(target.value)}
+            onChange={({ target }) => handleTaskTitleChange(target.value)}
+            onKeyDown={(event) => handleKeyPress(event.key)}
             className="bg-gray-300 rounded-lg px-1 focus:border-yellow-300"
             autoFocus
           />

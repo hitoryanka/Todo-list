@@ -1,22 +1,53 @@
-import { initialTasks } from "@/lib/initialTasks";
-import TaskSubtasks from "./components/task-subtasks";
-import Task from "./components/task";
+'use client';
+
+import { Isubtask, Itask, Status, initialTasks } from '@/lib/initialTasks';
+import { useContext, createContext } from 'react';
+import { useSelector } from 'react-redux';
+import TaskSubtasks from './components/task-subtasks';
+import Task from './components/task';
+import { IState } from '@/redux-toolkit/store';
+import { create } from 'domain';
+
+export const TaskContext = createContext<Itask>({
+  id: '1',
+  title: 'Brush teeth',
+  date: 'may 17th',
+  description: "gotta keep'em clean!",
+  important: true,
+  status: Status.inProcess,
+  subtasks: [],
+});
 
 export default function Page({ params }: { params: { id: string } }) {
-  const task = initialTasks.find(task => task.id === +params.id);
+  const task = useSelector((state: IState) =>
+    state.tasks.find((task) => task.id === params.id)
+  );
+
+  // const [task, setTask] = useState(fetchedTask);
+
+  // function setSubTasks(subtasks: Isubtask[]) {
+  //   if (task) {
+  //     setTask({
+  //       ...task,
+  //       subtasks,
+  //     });
+  //   } else {
+  //     throw new Error("Task doesn't exist - can't update subtasks");
+  //   }
+  // }
 
   if (!task) {
     return <h1 className="text-white">no such task</h1>;
   }
   return (
-    <article className="flex-1 flex-col h-full">
-      <Task
-        important={task.important}
-        description={task.description}
-        title={task.title}
-        subtasks={task.subtasks}
-      />
-      <TaskSubtasks subtasks={task.subtasks} />
-    </article>
+    <TaskContext.Provider value={task}>
+      <article className="flex-1 flex-col h-full">
+        <Task />
+        <TaskSubtasks
+          subtasks={task.subtasks}
+          taskId={params.id}
+        />
+      </article>
+    </TaskContext.Provider>
   );
 }

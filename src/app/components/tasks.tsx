@@ -1,15 +1,16 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import CreateTask from "./createTask";
+import { useState } from 'react';
+import CreateTask from './createTask';
+import { useSelector } from 'react-redux';
 
-import filterSVG from "../images/filter.svg";
-import Image from "next/image";
-import Task from "./task";
-import { initialTasks } from "@/lib/initialTasks";
+import filterSVG from '../images/filter.svg';
+import Image from 'next/image';
+import Task from './task';
+import { IState } from '@/redux-toolkit/store';
 
 export default function Tasks() {
-  const [tasks, setTasks] = useState(initialTasks);
+  const tasks = useSelector((state: IState) => state.tasks);
 
   return (
     <main className="w-90 mx-5 mt-1">
@@ -24,7 +25,7 @@ export default function Tasks() {
           />
         </header>
         <main>
-          {tasks.map(task => (
+          {tasks.map((task) => (
             <Task
               key={task.id}
               {...task}

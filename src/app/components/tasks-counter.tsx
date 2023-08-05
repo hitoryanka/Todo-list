@@ -1,9 +1,11 @@
-"use client";
+'use client';
 
-import Image from "next/image";
-import { useState } from "react";
+import Image from 'next/image';
+import { useState } from 'react';
 
 export default function TasksCounter({ checkmark }: { checkmark: string }) {
+  // use fake api to get todos
+  // https://jsonplaceholder.typicode.com/todos
   const [tasksCnt, setTasksCnt] = useState(34);
 
   return (

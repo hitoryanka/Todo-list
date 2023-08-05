@@ -1,30 +1,22 @@
-"use client";
+'use client';
 
-import importantStatic from "../images/important-fire-static.png";
-import importantAnimated from "../images/important-fire-animated.gif";
-import detailsSVG from "../images/go-into-task.svg";
-import detailsSVGDark from "../images/go-into-task-dark.svg";
-import Image, { StaticImageData } from "next/image";
-import { useState } from "react";
-import Link from "next/link";
+import importantStatic from '../images/important-fire-static.png';
+import importantAnimated from '../images/important-fire-animated.gif';
+import detailsSVG from '../images/go-into-task.svg';
+import detailsSVGDark from '../images/go-into-task-dark.svg';
+import Image, { StaticImageData } from 'next/image';
+import { useState } from 'react';
+import Link from 'next/link';
 
 interface Props {
   id: number;
   title: string;
   date: string;
-  description: string;
   important: boolean;
-  subtasks: { id: number; description: string }[];
+  subtasks: { id: string; description: string }[];
 }
-
-export default function Task({
-  id,
-  title,
-  date,
-  description,
-  important,
-  subtasks,
-}: Props) {
+                    
+export default function Task({ id, title, date, important, subtasks }: Props) {
   const [fireUrl, setFireUrl] = useState(importantStatic);
   const [detailsUrl, setDetailsUrl] = useState(detailsSVG);
 
