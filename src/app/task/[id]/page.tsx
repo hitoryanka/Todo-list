@@ -23,19 +23,6 @@ export default function Page({ params }: { params: { id: string } }) {
     state.tasks.find((task) => task.id === params.id)
   );
 
-  // const [task, setTask] = useState(fetchedTask);
-
-  // function setSubTasks(subtasks: Isubtask[]) {
-  //   if (task) {
-  //     setTask({
-  //       ...task,
-  //       subtasks,
-  //     });
-  //   } else {
-  //     throw new Error("Task doesn't exist - can't update subtasks");
-  //   }
-  // }
-
   if (!task) {
     return <h1 className="text-white">no such task</h1>;
   }
@@ -43,10 +30,7 @@ export default function Page({ params }: { params: { id: string } }) {
     <TaskContext.Provider value={task}>
       <article className="flex-1 flex-col h-full">
         <Task />
-        <TaskSubtasks
-          subtasks={task.subtasks}
-          taskId={params.id}
-        />
+        <TaskSubtasks />
       </article>
     </TaskContext.Provider>
   );

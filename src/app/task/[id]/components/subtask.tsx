@@ -9,6 +9,7 @@ import {
   upadteSubtaskTitle,
   updateSubtaskStatus,
 } from '@/redux-toolkit/features/tasks/taskSlice';
+import { calculateRows } from '@/lib/utils';
 
 interface Props {
   task: Isubtask;
@@ -44,8 +45,9 @@ export default function Subtask({
     }
   }
 
-  function handleTaskTitleChange(value: string) {
-    setCurrentDescription(value);
+  function handleTaskTitleChange(target: EventTarget & HTMLTextAreaElement) {
+    calculateRows(target);
+    setCurrentDescription(target.value);
     dispatch(
       upadteSubtaskTitle({
         id: parentTaskId,
@@ -71,34 +73,36 @@ export default function Subtask({
       className="flex align-middle justify-between text-2xl"
       key={task.id}
     >
-      <div className="flex gap-3">
+      <div className="flex grow gap-3">
         <input
           type="checkbox"
           checked={task.done}
           onChange={handleTaskDone}
-          className="appearance-none bg-gray-200 checked:bg-yellow-300 w-8 h-8 rounded-full "
+          className="appearance-none bg-gray-200 checked:bg-yellow-300 checked:bg-[url('/app/images/checked.png')] checked:bg-repeat w-8 h-8 rounded-full"
         />
         {/* TODO crossing out animation */}
-        {!isEditing ? (
-          <Description
-            isDone={task.done}
-            description={currentDescription}
-          />
-        ) : (
-          <input
-            type="text"
-            onBlur={handleBlur}
-            value={currentDescription}
-            onChange={({ target }) => handleTaskTitleChange(target.value)}
-            onKeyDown={(event) => handleKeyPress(event.key)}
-            className="bg-gray-300 rounded-lg px-1 focus:border-yellow-300"
-            autoFocus
-          />
-        )}
+        <h2 className="grow w-full">
+          {!isEditing ? (
+            <Description
+              isDone={task.done}
+              description={currentDescription}
+            />
+          ) : (
+            <textarea
+              onBlur={handleBlur}
+              value={currentDescription}
+              onChange={({ target }) => handleTaskTitleChange(target)}
+              onKeyDown={(event) => handleKeyPress(event.key)}
+              className=" rounded-lg px-1 focus:border-yellow-300 resize-none overflow-hidden w-full"
+              onFocus={({ target }) => calculateRows(target)}
+              autoFocus
+            />
+          )}
+        </h2>
       </div>
 
       <button
-        className="text-2xl"
+        className="text-2xl shrink-0 self-start"
         onClick={() => setIsEditing(!isEditing)}
       >
         <Image
@@ -119,7 +123,7 @@ interface DescriptionProps {
 
 function Description({ isDone, description }: DescriptionProps) {
   return isDone ? (
-    <p className="text-gray-400 line-through">{description}</p>
+    <p className="text-gray-400 line-through break-words">{description}</p>
   ) : (
     <p>{description}</p>
   );

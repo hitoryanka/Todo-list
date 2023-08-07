@@ -4,7 +4,7 @@ import { useState } from 'react';
 import CreateTask from './createTask';
 import { useSelector } from 'react-redux';
 
-import filterSVG from '../images/filter.svg';
+import filterSVG from '../images/filter.png';
 import Image from 'next/image';
 import Task from './task';
 import { IState } from '@/redux-toolkit/store';

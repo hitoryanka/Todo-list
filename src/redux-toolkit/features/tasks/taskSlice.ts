@@ -18,6 +18,14 @@ interface IUpadteSubtaskTitle {
   };
 }
 
+interface IupdateImprotantTask {
+  type: string;
+  payload: {
+    id: string;
+    important: boolean;
+  };
+}
+
 interface IUpadteSubtaskStatus {
   type: string;
   payload: {
@@ -89,6 +97,17 @@ export const taskSlice = createSlice({
       return state;
     },
 
+    updateImportantTask(state, action: IupdateImprotantTask) {
+      const task = state.find((t) => t.id === action.payload.id);
+      if (task) {
+        task.important = action.payload.important;
+      } else {
+        throw new Error('task not found');
+      }
+
+      return state;
+    },
+
     updateTaskDescription(state, action: IUpdateTaskDescription) {
       return [
         ...state.map((task) =>
@@ -147,6 +166,7 @@ export const {
   addTask,
   deleteTask,
   updateTaskTitle,
+  updateImportantTask,
   updateTaskDescription,
   updateTaskStatus,
   addSubtask,

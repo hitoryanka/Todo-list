@@ -1,15 +1,22 @@
-import { Isubtask, calculateProgress } from "@/lib/initialTasks";
+import { Status, calculateProgress } from '@/lib/initialTasks';
+import { updateTaskStatus } from '@/redux-toolkit/features/tasks/taskSlice';
+import { useContext } from 'react';
+import { useDispatch } from 'react-redux';
+import { TaskContext } from '../page';
 
-interface Props {
-  subtasks: Isubtask[];
-}
-
-export default function TaskProgress({ subtasks }: Props) {
+export default function TaskProgress() {
+  const dispatch = useDispatch();
+  const { id, subtasks, status } = useContext(TaskContext);
   const progress = calculateProgress(subtasks);
+  if (status !== Status.done && progress === '100') {
+    dispatch(updateTaskStatus({ id, status: Status.done }));
+  } else if (status !== Status.inProcess && progress !== '100') {
+    dispatch(updateTaskStatus({ id, status: Status.inProcess }));
+  }
   return (
     <>
       <h2 className="text-gray-300 mb-6">
-        {subtasks.filter(t => t.done).length}/{subtasks.length} subtasks done
+        {subtasks.filter((t) => t.done).length}/{subtasks.length} subtasks done
       </h2>
       <div className="relative flex bg-gray-700 rounded-2xl w-full h-10">
         <div
