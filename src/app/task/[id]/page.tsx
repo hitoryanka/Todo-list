@@ -1,12 +1,11 @@
 'use client';
 
-import { Isubtask, Itask, Status, initialTasks } from '@/lib/initialTasks';
-import { useContext, createContext } from 'react';
+import { Itask, Status } from '@/lib/initialTasks';
+import { createContext } from 'react';
 import { useSelector } from 'react-redux';
 import TaskSubtasks from './components/task-subtasks';
 import Task from './components/task';
 import { IState } from '@/redux-toolkit/store';
-import { create } from 'domain';
 
 export const TaskContext = createContext<Itask>({
   id: '1',

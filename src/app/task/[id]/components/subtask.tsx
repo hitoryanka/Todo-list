@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import { useContext } from 'react';
 import { Isubtask } from '@/lib/initialTasks';
 import { useState } from 'react';
 import editPNG from '../../../images/edit.png';
@@ -10,26 +11,25 @@ import {
   updateSubtaskStatus,
 } from '@/redux-toolkit/features/tasks/taskSlice';
 import { calculateRows } from '@/lib/utils';
+import { TaskContext } from '../page';
 
+// TODO refactor to use context
 interface Props {
   task: Isubtask;
-  onCheck: Function;
   removeTask: Function;
-  parentTaskId: string;
 }
-export default function Subtask({
-  task,
-  onCheck,
-  removeTask,
-  parentTaskId,
-}: Props) {
+export default function Subtask({ task, removeTask }: Props) {
   const dispatch = useDispatch();
+
+  const [isDone, setIsDone] = useState(task.done);
   const [isEditing, setIsEditing] = useState(
     task.description == 'create title' ? true : false
   );
   const [currentDescription, setCurrentDescription] = useState(
     task.description
   );
+
+  const { id: parentTaskId } = useContext(TaskContext);
 
   function handleBlur() {
     setIsEditing(!isEditing);
@@ -58,12 +58,12 @@ export default function Subtask({
   }
 
   function handleTaskDone() {
-    onCheck(task.id);
+    setIsDone((prev) => !prev);
     dispatch(
       updateSubtaskStatus({
         id: parentTaskId,
         subtaskId: task.id,
-        done: !task.done,
+        done: !isDone,
       })
     );
   }
@@ -76,7 +76,7 @@ export default function Subtask({
       <div className="flex grow gap-3">
         <input
           type="checkbox"
-          checked={task.done}
+          checked={isDone}
           onChange={handleTaskDone}
           className="appearance-none bg-gray-200 checked:bg-yellow-300 checked:bg-[url('/app/images/checked.png')] checked:bg-repeat w-8 h-8 rounded-full"
         />
@@ -84,7 +84,7 @@ export default function Subtask({
         <h2 className="grow w-full">
           {!isEditing ? (
             <Description
-              isDone={task.done}
+              isDone={isDone}
               description={currentDescription}
             />
           ) : (

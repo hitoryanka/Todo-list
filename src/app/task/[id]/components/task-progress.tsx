@@ -8,6 +8,7 @@ export default function TaskProgress() {
   const dispatch = useDispatch();
   const { id, subtasks, status } = useContext(TaskContext);
   const progress = calculateProgress(subtasks);
+
   if (status !== Status.done && progress === '100') {
     dispatch(updateTaskStatus({ id, status: Status.done }));
   } else if (status !== Status.inProcess && progress !== '100') {
