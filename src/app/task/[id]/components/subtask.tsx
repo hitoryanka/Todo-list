@@ -18,13 +18,13 @@ interface Props {
   task: Isubtask;
   removeTask: Function;
 }
+// BUG when task is created - it renders as a copy of task at the bottom
 export default function Subtask({ task, removeTask }: Props) {
+  console.log(task.description === 'first subtask');
   const dispatch = useDispatch();
 
   const [isDone, setIsDone] = useState(task.done);
-  const [isEditing, setIsEditing] = useState(
-    task.description == 'create title' ? true : false
-  );
+  const [isEditing, setIsEditing] = useState(false);
   const [currentDescription, setCurrentDescription] = useState(
     task.description
   );
@@ -69,10 +69,7 @@ export default function Subtask({ task, removeTask }: Props) {
   }
 
   return (
-    <li
-      className="flex align-middle justify-between text-2xl"
-      key={task.id}
-    >
+    <li className="flex align-middle justify-between text-2xl">
       <div className="flex grow gap-3">
         <input
           type="checkbox"

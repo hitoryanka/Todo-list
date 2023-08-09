@@ -12,7 +12,6 @@ import Image from 'next/image';
 export default function TaskSubtasks() {
   const dispatch = useDispatch();
   const { id: taskId, subtasks } = useContext(TaskContext);
-  const [sortedSubtasks, setSortedSubtasks] = useState(subtasks);
   const [currentSort, setCurrentSort] = useState('new');
 
   const ref = useRef<HTMLElement>(null);
@@ -36,18 +35,24 @@ export default function TaskSubtasks() {
     }
   }
 
-  function handleSort(sortType: string) {
-    if (sortType !== currentSort) {
-      setCurrentSort(sortType);
-    }
-    let sortedSubtasks = [...subtasks];
-    if (sortType === 'done') {
-      sortedSubtasks = [
-        ...sortedSubtasks.filter((t) => t.done),
-        ...sortedSubtasks.filter((t) => !t.done),
-      ];
-    }
-    setSortedSubtasks(sortedSubtasks);
+  function handleSort() {
+    return [...subtasks].sort((t1, t2) => {
+      if (currentSort === 'done') {
+        if (t1.done && t2.done) {
+          return +t2.id - +t1.id;
+        } else {
+          return t1.done ? 1 : -1;
+        }
+      } else if (currentSort === 'pending') {
+        if (!t1.done && !t2.done) {
+          return +t2.id - +t1.id;
+        } else {
+          return t2.done ? 1 : -1;
+        }
+      } else {
+        return +t2.id - +t1.id;
+      }
+    });
   }
 
   function handleAddSubtask() {
@@ -56,7 +61,7 @@ export default function TaskSubtasks() {
       description: 'create title',
       done: false,
     };
-    setSortedSubtasks((prev) => [...prev, newTask]);
+    // setSortedSubtasks((prev) => [...prev, newTask]);
     dispatch(addSubtask({ id: taskId, subtask: newTask }));
   }
 
@@ -90,7 +95,7 @@ export default function TaskSubtasks() {
                 <button
                   className="mx-1"
                   type="button"
-                  onClick={() => handleSort('done')}
+                  onClick={() => setCurrentSort('done')}
                 >
                   Done
                 </button>
@@ -99,6 +104,7 @@ export default function TaskSubtasks() {
                 <button
                   className="mx-1"
                   type="button"
+                  onClick={() => setCurrentSort('pending')}
                 >
                   Pending
                 </button>
@@ -107,6 +113,7 @@ export default function TaskSubtasks() {
                 <button
                   className="mx-1"
                   type="button"
+                  onClick={() => setCurrentSort('new')}
                 >
                   New
                 </button>
@@ -116,12 +123,22 @@ export default function TaskSubtasks() {
         </div>
       </nav>
       <ul className="flex flex-col gap-3 mt-5 px-10">
-        {sortedSubtasks.map((t) => (
-          <Subtask
-            task={t}
-            removeTask={() => console.log("I'm not deleting anything yet!")}
-          />
-        ))}
+        {/* BUG instead of sorting on every render use useMemo() to maintain order of task untill sorting button pressed */}
+        {handleSort().map((t, i) => {
+          if (i === 0) {
+            console.log('start render');
+          }
+          if (i === subtasks.length - 1) {
+            console.log('end render');
+          }
+          return (
+            <Subtask
+              task={t}
+              key={t.id}
+              removeTask={() => console.log("I'm not deleting anything yet!")}
+            />
+          );
+        })}
       </ul>
       <AddSubtask onAdd={() => handleAddSubtask()} />
     </section>

@@ -21,7 +21,6 @@ export default function Page({ params }: { params: { id: string } }) {
   const task = useSelector((state: IState) =>
     state.tasks.find((task) => task.id === params.id)
   );
-
   if (!task) {
     return <h1 className="text-white">no such task</h1>;
   }
