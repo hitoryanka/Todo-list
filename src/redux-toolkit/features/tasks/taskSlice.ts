@@ -1,11 +1,27 @@
 import { Isubtask, Itask, Status, initialTasks } from '@/lib/initialTasks';
 import { createSlice } from '@reduxjs/toolkit';
+import { type } from 'os';
 
 interface IAddSubtask {
   type: string;
   payload: {
     id: string;
     subtask: Isubtask;
+  };
+}
+interface IRemoveSubtask {
+  type: string;
+  payload: {
+    id: string;
+    subtaskId: string;
+  };
+}
+
+interface ISortSubtasks {
+  type: string;
+  payload: {
+    id: string;
+    sortType: string;
   };
 }
 
@@ -119,11 +135,16 @@ export const taskSlice = createSlice({
     },
 
     updateTaskStatus(state, action: IUpdateTaskStatus) {
-      return state.map((task) =>
-        task.id === action.payload.id
-          ? { ...task, status: action.payload.status }
-          : task
-      );
+      const task = state.find((t) => t.id === action.payload.id);
+      if (!task) {
+        throw new Error('task not found');
+      }
+      task.status = action.payload.status;
+      if (task.status === Status.done) {
+        task.subtasks.forEach((t) => (t.done = true));
+      }
+
+      return state;
     },
 
     addSubtask(state, action: IAddSubtask) {
@@ -134,6 +155,41 @@ export const taskSlice = createSlice({
             : task
         ),
       ];
+    },
+    removeSubtask(state, action: IRemoveSubtask) {
+      const task = state.find((t) => t.id === action.payload.id);
+      if (!task) {
+        throw new Error("task doesn't exist");
+      }
+      task.subtasks = task.subtasks.filter(
+        (t) => t.id !== action.payload.subtaskId
+      );
+      return state;
+    },
+    // TODO simplify sorting
+    sortSubtasks(state, action: ISortSubtasks) {
+      const task = state.find((t) => t.id === action.payload.id);
+      if (!task) {
+        throw new Error("task doesn't exist");
+      }
+      task.subtasks.sort((t1, t2) => {
+        if (action.payload.sortType === 'done') {
+          if (t1.done && t2.done) {
+            return +t1.id - +t2.id;
+          } else {
+            return t1.done ? -1 : t2.done ? 1 : 0;
+          }
+        } else if (action.payload.sortType === 'pending') {
+          if (!t1.done && !t2.done) {
+            return +t1.id - +t2.id;
+          } else {
+            return t2.done ? (t1.done ? 0 : -1) : 1;
+          }
+        } else {
+          return +t2.id - +t1.id;
+        }
+      });
+      return state;
     },
 
     upadteSubtaskTitle(state, action: IUpadteSubtaskTitle) {
@@ -165,11 +221,13 @@ export const taskSlice = createSlice({
 export const {
   addTask,
   deleteTask,
+  sortSubtasks,
   updateTaskTitle,
   updateImportantTask,
   updateTaskDescription,
   updateTaskStatus,
   addSubtask,
+  removeSubtask,
   updateSubtaskStatus,
   upadteSubtaskTitle,
 } = taskSlice.actions;

@@ -13,7 +13,6 @@ export default function Task() {
       <TaskNav />
       <main>
         <TaskTitle />
-        {/* TODO if there's no subtasks - change progress bar to a 'Done' button */}
         {subtasks.length ? <TaskProgress /> : ''}
         <Description />
       </main>

@@ -1,7 +1,7 @@
 export enum Status {
-  inProcess = 'in process',
-  done = 'done',
-  archived = 'archived',
+  inProcess = 'In Process',
+  done = 'Done',
+  archived = 'Archived',
 }
 
 export interface Itask {

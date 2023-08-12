@@ -1,16 +1,17 @@
 'use client';
 
 import Image from 'next/image';
-import { useContext } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { Isubtask } from '@/lib/initialTasks';
-import { useState } from 'react';
 import editPNG from '../../../images/edit.png';
+import deletePNG from '../../../images/x.png';
 import { useDispatch } from 'react-redux';
 import {
+  removeSubtask,
   upadteSubtaskTitle,
   updateSubtaskStatus,
 } from '@/redux-toolkit/features/tasks/taskSlice';
-import { calculateRows } from '@/lib/utils';
+import { calculateRows, updateCheckboxStyle } from '@/lib/utils';
 import { TaskContext } from '../page';
 
 // TODO refactor to use context
@@ -20,14 +21,16 @@ interface Props {
 }
 // BUG when task is created - it renders as a copy of task at the bottom
 export default function Subtask({ task, removeTask }: Props) {
-  console.log(task.description === 'first subtask');
   const dispatch = useDispatch();
 
-  const [isDone, setIsDone] = useState(task.done);
   const [isEditing, setIsEditing] = useState(false);
   const [currentDescription, setCurrentDescription] = useState(
     task.description
   );
+  const ref = useRef<HTMLLabelElement>(null);
+  useEffect(() => {
+    updateCheckboxStyle(ref, task.done);
+  });
 
   const { id: parentTaskId } = useContext(TaskContext);
 
@@ -58,12 +61,11 @@ export default function Subtask({ task, removeTask }: Props) {
   }
 
   function handleTaskDone() {
-    setIsDone((prev) => !prev);
     dispatch(
       updateSubtaskStatus({
         id: parentTaskId,
         subtaskId: task.id,
-        done: !isDone,
+        done: !task.done,
       })
     );
   }
@@ -71,17 +73,25 @@ export default function Subtask({ task, removeTask }: Props) {
   return (
     <li className="flex align-middle justify-between text-2xl">
       <div className="flex grow gap-3">
-        <input
-          type="checkbox"
-          checked={isDone}
-          onChange={handleTaskDone}
-          className="appearance-none bg-gray-200 checked:bg-yellow-300 checked:bg-[url('/app/images/checked.png')] checked:bg-repeat w-8 h-8 rounded-full"
-        />
+        <div className="self-center">
+          <input
+            type="checkbox"
+            id={task.id}
+            checked={task.done}
+            onChange={handleTaskDone}
+            className="appearance-none"
+          />
+          <label
+            ref={ref}
+            htmlFor={task.id}
+            className="inline-block rounded-full w-7 h-7"
+          />
+        </div>
         {/* TODO crossing out animation */}
         <h2 className="grow w-full">
           {!isEditing ? (
             <Description
-              isDone={isDone}
+              isDone={task.done}
               description={currentDescription}
             />
           ) : (
@@ -98,17 +108,31 @@ export default function Subtask({ task, removeTask }: Props) {
         </h2>
       </div>
 
-      <button
-        className="text-2xl shrink-0 self-start"
-        onClick={() => setIsEditing(!isEditing)}
-      >
-        <Image
-          src={editPNG.src}
-          alt="edit"
-          width={30}
-          height={30}
-        />
-      </button>
+      <div className="flex gap-3 self-start ml-5 shrink-0 text-2xl">
+        <button
+          type="button"
+          onClick={() => setIsEditing(!isEditing)}
+        >
+          <Image
+            src={editPNG.src}
+            alt="edit"
+            width={30}
+            height={30}
+          />
+        </button>
+        <button
+          type="button"
+          onClick={() =>
+            dispatch(removeSubtask({ id: parentTaskId, subtaskId: task.id }))
+          }
+        >
+          <Image
+            src={deletePNG}
+            alt="delete"
+            width={24}
+          />
+        </button>
+      </div>
     </li>
   );
 }

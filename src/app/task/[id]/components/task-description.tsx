@@ -10,7 +10,11 @@ export default function Description() {
   const [isDescriptionEditing, setIsDescriptionEditing] = useState(false);
 
   function handleDescriptionChange(target: EventTarget & HTMLTextAreaElement) {
-    setTaskDescription(target.value);
+    if (target.value.trim()) {
+      setTaskDescription(target.value);
+    } else {
+      setTaskDescription('');
+    }
     calculateRows(target);
   }
   return (
@@ -32,7 +36,7 @@ export default function Description() {
           </p>
         )}
         <button
-          className="text-white mx-[50px] shrink-0 self-start"
+          className="text-white mx-[44px] shrink-0 self-start"
           onClick={() => setIsDescriptionEditing((prevState) => !prevState)}
         >
           <Image
