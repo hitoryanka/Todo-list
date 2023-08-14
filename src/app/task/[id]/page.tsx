@@ -4,8 +4,8 @@ import { Itask, Status } from '@/lib/initialTasks';
 import { createContext } from 'react';
 import { useSelector } from 'react-redux';
 import TaskSubtasks from './components/task-subtasks';
-import Task from './components/task';
 import { IState } from '@/redux-toolkit/store';
+import TaskHeader from './components/task';
 
 export const TaskContext = createContext<Itask>({
   id: '1',
@@ -26,8 +26,8 @@ export default function Page({ params }: { params: { id: string } }) {
   }
   return (
     <TaskContext.Provider value={task}>
-      <article className="flex-1 flex-col h-full">
-        <Task />
+      <article className="flex-1 flex-col h-full font-light">
+        <TaskHeader />
         <TaskSubtasks />
       </article>
     </TaskContext.Provider>

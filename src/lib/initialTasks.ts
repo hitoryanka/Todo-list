@@ -24,7 +24,7 @@ export const initialTasks: Itask[] = [
   {
     id: '0',
     title: 'Drink some water',
-    date: 'may 17th',
+    date: '1692019595593',
     description: 'get a glass of water and chug it in',
     important: true,
     status: Status.inProcess,
@@ -33,7 +33,7 @@ export const initialTasks: Itask[] = [
   {
     id: '1',
     title: 'Brush teeth',
-    date: 'may 17th',
+    date: '1692019595593',
     description: "gotta keep'em clean!",
     important: true,
     status: Status.inProcess,
@@ -46,7 +46,7 @@ export const initialTasks: Itask[] = [
   {
     id: '2',
     title: 'Do some stretches',
-    date: 'may 17th',
+    date: '1692019595593',
     description: 'you got too rusty!',
     important: false,
     status: Status.inProcess,

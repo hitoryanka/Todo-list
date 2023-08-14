@@ -5,20 +5,28 @@ import importantAnimated from '../images/important-fire-animated.gif';
 import detailsSVG from '../images/go-into-task.svg';
 import detailsSVGDark from '../images/go-into-task-dark.svg';
 import Image, { StaticImageData } from 'next/image';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
+import { useDispatch, useSelector } from 'react-redux';
+import { IState } from '@/redux-toolkit/store';
+import { Status } from '@/lib/initialTasks';
+import { updateCheckboxStyle } from '@/lib/utils';
 
 interface Props {
-  id: number;
-  title: string;
-  date: string;
-  important: boolean;
-  subtasks: { id: string; description: string }[];
+  id: string;
 }
-                    
-export default function Task({ id, title, date, important, subtasks }: Props) {
+
+export default function Task({ id }: Props) {
   const [fireUrl, setFireUrl] = useState(importantStatic);
   const [detailsUrl, setDetailsUrl] = useState(detailsSVG);
+
+  const task = useSelector((state: IState) =>
+    state.tasks.find((t) => t.id === id)
+  );
+  if (!task) {
+    throw new Error("task doesn't exist");
+  }
+  const { title, date, important, subtasks, status } = task;
 
   function onHover() {
     setFireUrl(importantAnimated);
@@ -44,11 +52,12 @@ export default function Task({ id, title, date, important, subtasks }: Props) {
           />
           {subtasks.length !== 0 && (
             <span className="text-lg text-gray-400">
-              {subtasks.length} subtasks
+              {subtasks.length} {`subtask${subtasks.length !== 1 ? 's' : ''}`}
             </span>
           )}
         </div>
-        <div className="flex flex-col place-items-center pr-4">
+
+        <button className="flex flex-col place-items-center pr-4">
           {/* TODO how to change svg color?? */}
           <img
             className=""
@@ -56,8 +65,8 @@ export default function Task({ id, title, date, important, subtasks }: Props) {
             alt="see task"
             width={20}
           />
-          <span>{date}</span>
-        </div>
+          <span>{new Date(+date).toLocaleDateString()}</span>
+        </button>
       </article>
     </Link>
   );
@@ -76,7 +85,7 @@ function Title({
     <div className="flex space-x-2">
       {important && (
         <Image
-          className=""
+          className="self-start"
           src={imageUrl.src}
           alt="important"
           width={40}

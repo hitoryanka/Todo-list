@@ -6,10 +6,10 @@ import { Provider } from 'react-redux';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <Provider store={store}>
-      <html className="h-full">
-        <body className="h-full">{children}</body>
-      </html>
-    </Provider>
+    <html className="h-full">
+      <body className="h-full">
+        <Provider store={store}>{children}</Provider>
+      </body>
+    </html>
   );
 }

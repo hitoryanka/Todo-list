@@ -12,7 +12,6 @@ import { TaskContext } from '../page';
 import { calculateRows } from '@/lib/utils';
 
 export default function TaskTitle() {
-  // TODO make important sign a button and add inactive state as 'fire-outline'
   const { important, title, id } = useContext(TaskContext);
   const dispatch = useDispatch();
   const [isTitleEditing, setIsTitleEditing] = useState(false);

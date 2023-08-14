@@ -8,7 +8,6 @@ export default function TaskProgress() {
   const dispatch = useDispatch();
   const { id, subtasks, status } = useContext(TaskContext);
   const progress = calculateProgress(subtasks);
-  // BUG status is recalculated here after manual change
   if (status !== Status.archived) {
     if (status !== Status.done && progress === '100') {
       dispatch(updateTaskStatus({ id, status: Status.done }));

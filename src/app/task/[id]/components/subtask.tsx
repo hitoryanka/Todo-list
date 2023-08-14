@@ -14,12 +14,11 @@ import {
 import { calculateRows, updateCheckboxStyle } from '@/lib/utils';
 import { TaskContext } from '../page';
 
-// TODO refactor to use context
 interface Props {
   task: Isubtask;
   removeTask: Function;
 }
-// BUG when task is created - it renders as a copy of task at the bottom
+
 export default function Subtask({ task, removeTask }: Props) {
   const dispatch = useDispatch();
 
@@ -73,7 +72,7 @@ export default function Subtask({ task, removeTask }: Props) {
   return (
     <li className="flex align-middle justify-between text-2xl">
       <div className="flex grow gap-3">
-        <div className="self-center">
+        <div className="flex">
           <input
             type="checkbox"
             id={task.id}
@@ -84,11 +83,11 @@ export default function Subtask({ task, removeTask }: Props) {
           <label
             ref={ref}
             htmlFor={task.id}
-            className="inline-block rounded-full w-7 h-7"
+            className="inline-block rounded-full w-7 h-7 self-center"
           />
         </div>
         {/* TODO crossing out animation */}
-        <h2 className="grow w-full">
+        <h2 className="grow w-full self-start">
           {!isEditing ? (
             <Description
               isDone={task.done}

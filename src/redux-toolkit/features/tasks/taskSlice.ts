@@ -1,6 +1,5 @@
 import { Isubtask, Itask, Status, initialTasks } from '@/lib/initialTasks';
 import { createSlice } from '@reduxjs/toolkit';
-import { type } from 'os';
 
 interface IAddSubtask {
   type: string;
@@ -14,6 +13,13 @@ interface IRemoveSubtask {
   payload: {
     id: string;
     subtaskId: string;
+  };
+}
+
+interface ISort {
+  type: string;
+  payload: {
+    sortType: string;
   };
 }
 
@@ -53,7 +59,9 @@ interface IUpadteSubtaskStatus {
 
 interface IAddTask {
   type: string;
-  payload: Omit<Itask, 'id'>;
+  payload: {
+    title: string;
+  };
 }
 
 interface IDeleteTask {
@@ -91,9 +99,15 @@ export const taskSlice = createSlice({
   initialState: initialTasks,
   reducers: {
     addTask(state, action: IAddTask) {
+      const date = Date.now().toString();
       const newTask = {
-        id: Date.now().toString(),
-        ...action.payload,
+        id: date,
+        title: action.payload.title,
+        date,
+        description: '',
+        important: false,
+        status: Status.inProcess,
+        subtasks: Array<Isubtask>(),
       };
       state.push(newTask);
 
@@ -166,6 +180,49 @@ export const taskSlice = createSlice({
       );
       return state;
     },
+    sortTasks(state, action: ISort) {
+      state.sort((t1, t2) => {
+        if (action.payload.sortType === 'done') {
+          if (t1.status === Status.done && t2.status === Status.done) {
+            return +t1.id - +t2.id;
+          } else {
+            return t1.status === Status.done
+              ? -1
+              : t2.status === Status.done
+              ? 1
+              : 0;
+          }
+        } else if (action.payload.sortType === 'pending') {
+          if (t1.status !== Status.done && t2.status !== Status.done) {
+            return +t1.id - +t2.id;
+          } else {
+            return t2.status === Status.done
+              ? t1.status === Status.done
+                ? 0
+                : -1
+              : 1;
+          }
+        } else if (action.payload.sortType === 'important') {
+          if (t1.important) {
+            if (t2.important) {
+              return +t1.id - +t2.id;
+            } else {
+              return -1;
+            }
+          } else {
+            if (t2.important) {
+              return 1;
+            } else {
+              return +t1.id - +t2.id;
+            }
+          }
+        } else {
+          return +t2.id - +t1.id;
+        }
+      });
+
+      return state;
+    },
     // TODO simplify sorting
     sortSubtasks(state, action: ISortSubtasks) {
       const task = state.find((t) => t.id === action.payload.id);
@@ -221,6 +278,7 @@ export const taskSlice = createSlice({
 export const {
   addTask,
   deleteTask,
+  sortTasks,
   sortSubtasks,
   updateTaskTitle,
   updateImportantTask,
