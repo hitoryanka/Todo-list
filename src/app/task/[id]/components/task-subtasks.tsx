@@ -52,7 +52,7 @@ export default function TaskSubtasks() {
             </button>
 
             <section
-              className="absolute bg-white translate-x-[-10px] transition opacity-0 duration-200 border rounded-md shadow-lg right-[20px]"
+              className="absolute bg-white translate-x-[-5px] transition opacity-0 duration-200 border rounded-md shadow-lg right-[20px] pointer-events-none"
               ref={ref}
             >
               <ul className="text-center w-full">

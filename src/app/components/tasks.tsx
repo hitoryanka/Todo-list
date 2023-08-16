@@ -7,7 +7,7 @@ import filterSVG from '../images/filter.png';
 import Image from 'next/image';
 import Task from './task';
 import { IState } from '@/redux-toolkit/store';
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import { handleDropDown } from '@/lib/utils';
 import { sortTasks } from '@/redux-toolkit/features/tasks/taskSlice';
 
@@ -39,7 +39,7 @@ export default function Tasks() {
               />
             </button>
             <section
-              className="absolute self-center bg-white translate-x-[-10px] translate-y-[75px] transition opacity-0 duration-200 border rounded-md shadow-lg right-[20px]"
+              className="absolute self-center bg-white translate-x-[-10px] translate-y-[75px] transition opacity-0 duration-200 border rounded-md shadow-lg right-[20px] pointer-events-none"
               ref={ref}
             >
               <ul className="text-center w-full">

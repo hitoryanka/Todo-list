@@ -22,7 +22,7 @@ export default function TasksCounter({ checkmark }: { checkmark: string }) {
         <span className="max-w-[10px]">
           Tasks completed this month.
           <br />
-          Keep it up!
+          {tasks.length ? 'Keep it up!' : "Let'make the first step!"}
         </span>
       </div>
     </div>

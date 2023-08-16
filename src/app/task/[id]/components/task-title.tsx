@@ -9,7 +9,6 @@ import importantOutline from '../../../images/important-fire-outline.png';
 import editPNG from '../../../images/editWhite.png';
 import { useContext, useState } from 'react';
 import { TaskContext } from '../page';
-import { calculateRows } from '@/lib/utils';
 
 export default function TaskTitle() {
   const { important, title, id } = useContext(TaskContext);
@@ -18,8 +17,12 @@ export default function TaskTitle() {
   const [taskTitle, setTaskTitle] = useState(title);
 
   function handleTitleChange(target: EventTarget & HTMLTextAreaElement) {
-    setTaskTitle(target.value);
-    calculateRows(target);
+    if (target.value.trim()) {
+      setTaskTitle(target.value);
+    } else {
+      setTaskTitle('');
+    }
+    target.style.height = `${target.scrollHeight}px`;
   }
 
   function handleTitleSubmit(key: string) {
@@ -48,10 +51,13 @@ export default function TaskTitle() {
         <h1 className="grow leading-10 break-all">
           {isTitleEditing ? (
             <textarea
+              rows={1}
               className="bg-black resize-none overflow-hidden w-full"
               autoFocus
-              onFocus={({ target }) => calculateRows(target)}
               onBlur={() => setIsTitleEditing(false)}
+              onFocus={({ target }) =>
+                (target.style.height = `${target.scrollHeight}px`)
+              }
               value={taskTitle}
               onChange={({ target }) => handleTitleChange(target)}
               onKeyDown={({ key }) => handleTitleSubmit(key)}

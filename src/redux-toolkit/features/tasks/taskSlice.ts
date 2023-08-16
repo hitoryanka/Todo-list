@@ -67,7 +67,9 @@ interface IAddTask {
 interface IDeleteTask {
   type: string;
   // payload contains ID of a task
-  payload: string;
+  payload: {
+    id: string;
+  };
 }
 
 interface IUpdateTitle {
@@ -115,7 +117,7 @@ export const taskSlice = createSlice({
     },
 
     deleteTask(state, action: IDeleteTask) {
-      return state.filter((task) => task.id !== action.payload);
+      return state.filter((task) => task.id !== action.payload.id);
     },
 
     updateTaskTitle(state, action: IUpdateTitle) {
