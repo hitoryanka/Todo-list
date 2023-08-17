@@ -11,15 +11,18 @@ import Tasks from './components/tasks';
 import { store } from '@/redux-toolkit/store';
 
 export default function Home() {
-  
   return (
-    <Provider store={store}>
-      <Header
-        profilePic={profilePic}
-        notifyBell={notifyBell}
-      />
-      <TasksCounter checkmark={checkmark} />
-      <Tasks />
-    </Provider>
+    <main className="flex justify-center">
+      <div className="sm:max-w-2xl grow">
+        <Provider store={store}>
+          <Header
+            profilePic={profilePic}
+            notifyBell={notifyBell}
+          />
+          <TasksCounter checkmark={checkmark} />
+          <Tasks />
+        </Provider>
+      </div>
+    </main>
   );
 }

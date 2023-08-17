@@ -31,6 +31,11 @@ export default function TaskTitle() {
     }
   }
 
+  function handleBlur() {
+    setIsTitleEditing(false);
+    dispatch(updateTaskTitle({ id, title: taskTitle }));
+  }
+
   return (
     <header className="flex justify-between mr-10">
       <section className="flex grow text-white text-[42px]">
@@ -54,7 +59,7 @@ export default function TaskTitle() {
               rows={1}
               className="bg-black resize-none overflow-hidden w-full"
               autoFocus
-              onBlur={() => setIsTitleEditing(false)}
+              onBlur={handleBlur}
               onFocus={({ target }) =>
                 (target.style.height = `${target.scrollHeight}px`)
               }

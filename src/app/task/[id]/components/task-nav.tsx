@@ -34,7 +34,7 @@ export default function TaskNav() {
         </button>
         <section
           // BUG there is better way to position dropdown rather than ise "translate-x"
-          className="absolute bg-white translate-x-[27px] w-28 transition opacity-0 duration-200 shadow-lg right-[20px]"
+          className="absolute bg-white translate-x-[27px] w-28 transition opacity-0 pointer-events-none duration-200 shadow-lg right-[20px]"
           ref={ref}
         >
           <ul className="absolute bg-white text-center rounded-md">

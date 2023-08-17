@@ -98,11 +98,19 @@ interface IUpdateTaskStatus {
   };
 }
 
-const tasks: Itask[] = JSON.parse(localStorage.getItem('tasks') || '{}');
+// bro write a fucking server already
+function getInitialTasks() {
+  if (typeof window !== 'undefined' && window.localStorage) {
+    const tasks: Itask[] = JSON.parse(localStorage.getItem('tasks') || '{}');
+    return Array.isArray(tasks) ? tasks : [];
+  }
+
+  return [];
+}
 
 export const taskSlice = createSlice({
   name: 'Tasks',
-  initialState: Array.isArray(tasks) ? tasks : initialTasks,
+  initialState: getInitialTasks(),
   reducers: {
     addTask(state, action: IAddTask) {
       const date = Date.now().toString();

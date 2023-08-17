@@ -11,7 +11,7 @@ import {
   upadteSubtaskTitle,
   updateSubtaskStatus,
 } from '@/redux-toolkit/features/tasks/taskSlice';
-import { calculateRows, updateCheckboxStyle } from '@/lib/utils';
+import { updateCheckboxStyle } from '@/lib/utils';
 import { TaskContext } from '../page';
 
 interface Props {
@@ -48,7 +48,7 @@ export default function Subtask({ task, removeTask }: Props) {
   }
 
   function handleTaskTitleChange(target: EventTarget & HTMLTextAreaElement) {
-    calculateRows(target);
+    target.style.height = `${target.scrollHeight}px`;
     setCurrentDescription(target.value);
     dispatch(
       upadteSubtaskTitle({
@@ -100,7 +100,9 @@ export default function Subtask({ task, removeTask }: Props) {
               onChange={({ target }) => handleTaskTitleChange(target)}
               onKeyDown={(event) => handleKeyPress(event.key)}
               className=" rounded-lg px-1 focus:border-yellow-300 resize-none overflow-hidden w-full"
-              onFocus={({ target }) => calculateRows(target)}
+              onFocus={({ target }) =>
+                (target.style.height = `${target.scrollHeight}px`)
+              }
               autoFocus
             />
           )}
