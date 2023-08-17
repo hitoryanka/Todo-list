@@ -1,3 +1,5 @@
+'use client';
+
 import { Isubtask, Itask, Status, initialTasks } from '@/lib/initialTasks';
 import { createSlice } from '@reduxjs/toolkit';
 
@@ -96,9 +98,11 @@ interface IUpdateTaskStatus {
   };
 }
 
+const tasks: Itask[] = JSON.parse(localStorage.getItem('tasks') || '{}');
+
 export const taskSlice = createSlice({
   name: 'Tasks',
-  initialState: initialTasks,
+  initialState: Array.isArray(tasks) ? tasks : initialTasks,
   reducers: {
     addTask(state, action: IAddTask) {
       const date = Date.now().toString();
@@ -274,6 +278,12 @@ export const taskSlice = createSlice({
       }
       return state;
     },
+  },
+  extraReducers: (builder) => {
+    builder.addMatcher(
+      (action) => action.type.startsWith('Tasks'),
+      (state) => localStorage.setItem('tasks', JSON.stringify(state))
+    );
   },
 });
 

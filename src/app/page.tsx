@@ -11,6 +11,7 @@ import Tasks from './components/tasks';
 import { store } from '@/redux-toolkit/store';
 
 export default function Home() {
+  
   return (
     <Provider store={store}>
       <Header

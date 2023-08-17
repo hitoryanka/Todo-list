@@ -13,6 +13,7 @@ import { sortTasks } from '@/redux-toolkit/features/tasks/taskSlice';
 
 export default function Tasks() {
   const tasks = useSelector((state: IState) => state.tasks);
+
   const dispatch = useDispatch();
   const ref = useRef<HTMLElement>(null);
 
