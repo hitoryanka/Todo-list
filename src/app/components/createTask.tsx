@@ -26,7 +26,6 @@ export default function CreateTask() {
 
   return (
     <div className="flex justify-between bg-blue-500 rounded-[40px] text-2xl  px-8 py-5 mb-1">
-      {/* TODO create state for rows in textArea so it would default to 1 row */}
       <textarea
         rows={1}
         value={title}

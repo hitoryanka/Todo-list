@@ -11,8 +11,6 @@ export default function Description() {
   const [isDescriptionEditing, setIsDescriptionEditing] = useState(false);
   const dispatch = useDispatch();
 
-  // BUG title and description are not updating
-
   function handleDescriptionChange(target: EventTarget & HTMLTextAreaElement) {
     if (target.value.trim()) {
       setTaskDescription(target.value);

@@ -119,7 +119,10 @@ function Title({
           height={40}
         />
       )}
-      <h3 className="text-2xl self-center">{title}</h3>
+      <h3 className="text-2xl self-center">
+        {/* TODO make a function that will check for punctuation symbols at the end */}
+        {title.length > 24 ? `${title.slice(0, 24).trimEnd()}...` : title}
+      </h3>
     </div>
   );
 }
