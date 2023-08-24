@@ -1,15 +1,23 @@
 'use client';
 
-import { configureStore } from '@reduxjs/toolkit';
+import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
 import taskReducer from './features/tasks/taskSlice';
 import { Itask } from '@/lib/initialTasks';
+import { TasksApiSlice } from './features/api/tasksApiSlice';
 
 export interface IState {
   tasks: Itask[];
+  // TODO it's any - type for now
+  [TasksApiSlice.reducerPath]: any;
 }
 
 export const store = configureStore({
-  reducer: { tasks: taskReducer },
+  reducer: {
+    tasks: taskReducer,
+    [TasksApiSlice.reducerPath]: TasksApiSlice.reducer,
+  },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(TasksApiSlice.middleware),
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

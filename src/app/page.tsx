@@ -9,19 +9,23 @@ import Header from './components/header';
 import TasksCounter from './components/tasks-counter';
 import Tasks from './components/tasks';
 import { store } from '@/redux-toolkit/store';
+import { ApiProvider } from '@reduxjs/toolkit/dist/query/react';
+import { TasksApiSlice } from '@/redux-toolkit/features/api/tasksApiSlice';
 
 export default function Home() {
   return (
     <main className="flex justify-center">
       <div className="sm:max-w-2xl grow">
-        <Provider store={store}>
-          <Header
-            profilePic={profilePic}
-            notifyBell={notifyBell}
-          />
-          <TasksCounter checkmark={checkmark} />
-          <Tasks />
-        </Provider>
+        <ApiProvider api={TasksApiSlice}>
+          <Provider store={store}>
+            <Header
+              profilePic={profilePic}
+              notifyBell={notifyBell}
+            />
+            <TasksCounter checkmark={checkmark} />
+            <Tasks />
+          </Provider>
+        </ApiProvider>
       </div>
     </main>
   );

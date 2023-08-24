@@ -7,12 +7,25 @@ import filterSVG from '../images/filter.png';
 import Image from 'next/image';
 import Task from './task';
 import { IState } from '@/redux-toolkit/store';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { handleDropDown } from '@/lib/utils';
 import { sortTasks } from '@/redux-toolkit/features/tasks/taskSlice';
+import {
+  Status,
+  useAddTaskMutation,
+  useDeleteTaskMutation,
+  useGetTasksQuery,
+  useUpdateTaskMutation,
+} from '@/redux-toolkit/features/api/tasksApiSlice';
 
 export default function Tasks() {
   const tasks = useSelector((state: IState) => state.tasks);
+  const { data, isLoading, isSuccess, isError, error } = useGetTasksQuery();
+  const [updateTask] = useUpdateTaskMutation();
+  useEffect(() => {
+    // deleteTask(6);
+    updateTask({ id: 14, status: Status.done });
+  }, []);
 
   const dispatch = useDispatch();
   const ref = useRef<HTMLElement>(null);

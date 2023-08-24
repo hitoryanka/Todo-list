@@ -20,30 +20,21 @@ export async function PATCH(request: Request) {
   if (!id) {
     return NextResponse.json('id not provided');
   }
-
-  if (title) {
-    const { error, data } = await supabase
-      .from('Subtasks')
-      .update({
-        title,
-      })
-      .eq('id', id)
-      .select();
-    if (error) {
-      return NextResponse.json(error.message);
-    }
-    return NextResponse.json(data);
-  } else if (done) {
-    const { error, data } = await supabase
-      .from('Subtasks')
-      .update({
-        done,
-      })
-      .eq('id', id)
-      .select();
-    if (error) {
-      return NextResponse.json(error.message);
-    }
-    return NextResponse.json(data);
+  if ((!title && done === undefined) || (title && done !== undefined)) {
+    return NextResponse.json(
+      { error: 'both title and status or none are provided' },
+      { status: 400 }
+    );
   }
+  const { error, data } = await supabase
+    .from('Subtasks')
+    .update({
+      [title ? 'title' : 'done']: title || done,
+    })
+    .eq('id', id)
+    .select();
+  if (error) {
+    return NextResponse.json(error.message);
+  }
+  return NextResponse.json(data);
 }

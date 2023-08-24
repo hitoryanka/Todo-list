@@ -1,6 +1,8 @@
 import supabase from '@/app/supabase';
 import { NextResponse } from 'next/server';
 
+// TODO add response status on fail
+
 export async function GET() {
   const { data: tasks, error } = await supabase.from('Tasks').select();
   if (error) {
@@ -12,6 +14,7 @@ export async function GET() {
 
 export async function DELETE(request: Request) {
   const { id } = await request.json();
+  console.log(id);
   if (!id) {
     return NextResponse.json({ message: 'Task id required' });
   }
@@ -23,7 +26,6 @@ export async function DELETE(request: Request) {
 
 export async function POST(request: Request) {
   const { title } = await request.json();
-
   if (!title) {
     return NextResponse.json({ message: 'Title required' });
   }
@@ -46,35 +48,32 @@ export async function POST(request: Request) {
 }
 
 export async function PATCH(request: Request) {
-  const { id, title, status } = await request.json();
-
-  if (!id) {
+  const { task: partialTask } = await request.json();
+  if (!partialTask.id) {
     return NextResponse.json('id not provided');
   }
 
-  if (title) {
-    const { error, data } = await supabase
-      .from('Tasks')
-      .update({
-        title,
-      })
-      .eq('id', id)
-      .select();
-    if (error) {
-      return NextResponse.json(error.message);
-    }
-    return NextResponse.json(data);
-  } else if (status) {
-    const { error, data } = await supabase
-      .from('Tasks')
-      .update({
-        status,
-      })
-      .eq('id', id)
-      .select();
-    if (error) {
-      return NextResponse.json(error.message);
-    }
-    return NextResponse.json(data);
+  const { data: fetchedTask, error: fetchedTaskError } = await supabase
+    .from('Tasks')
+    .select()
+    .eq('id', partialTask.id);
+  console.log(fetchedTask);
+
+  if (fetchedTaskError) {
+    return NextResponse.json({ error: fetchedTaskError });
+  } else if (!fetchedTask[0]) {
+    return NextResponse.json({ error: "Task with such id doesn't exist" });
   }
+
+  const { data, error } = await supabase
+    .from('Tasks')
+    .update({ ...partialTask })
+    .eq('id', partialTask.id)
+    .select();
+
+  if (error) {
+    return NextResponse.json({ error });
+  }
+
+  return NextResponse.json(data[0]);
 }
