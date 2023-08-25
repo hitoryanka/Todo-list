@@ -1,4 +1,4 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/dist/query';
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { Isubtask } from './tasksApiSlice';
 
 export const SubtasksApiSlice = createApi({
@@ -8,14 +8,16 @@ export const SubtasksApiSlice = createApi({
   endpoints: (builder) => ({
     // BUG I pass response type into generic but it's still unknown in
     // "transformResponse"
-    getSubtasks: builder.query<Isubtask[], void>({
-      query: () => '/subtasks',
+
+    // get subtasks for a SPECIFIC Task
+    getSubtasks: builder.query<Isubtask[], number>({
+      query: (id: number) => `/subtasks/${id}`,
       transformResponse: (res: Isubtask[]) => res.sort((a, b) => a.id - b.id),
       providesTags: ['subtasks'],
     }),
     addSubtask: builder.mutation({
-      query: (title: string) => ({
-        url: '/subtasks',
+      query: ({ id, title }: { id: number; title: string }) => ({
+        url: `/subtasks/${id}`,
         method: 'POST',
         body: { title },
       }),
@@ -30,13 +32,18 @@ export const SubtasksApiSlice = createApi({
       invalidatesTags: ['subtasks'],
     }),
     updateSubtask: builder.mutation({
-      query: (task: Partial<Isubtask>) => ({
+      query: (subtask: Partial<Isubtask>) => ({
         url: '/subtasks',
         method: 'PATCH',
-        body: { task },
+        body: subtask,
       }),
     }),
   }),
 });
-// BUG where are hooks?
-console.log(SubtasksApiSlice);
+
+export const {
+  useGetSubtasksQuery,
+  useDeleteSubtaskMutation,
+  useAddSubtaskMutation,
+  useUpdateSubtaskMutation,
+} = SubtasksApiSlice;

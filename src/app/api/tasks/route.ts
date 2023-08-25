@@ -14,13 +14,13 @@ export async function GET() {
 
 export async function DELETE(request: Request) {
   const { id } = await request.json();
-  console.log(id);
+
   if (!id) {
     return NextResponse.json({ message: 'Task id required' });
   }
 
   const response = await supabase.from('Tasks').delete().eq('id', id);
-  console.log(response.data);
+
   return NextResponse.json({ message: `Task with id=${id} was deleted` });
 }
 
@@ -57,7 +57,6 @@ export async function PATCH(request: Request) {
     .from('Tasks')
     .select()
     .eq('id', partialTask.id);
-  console.log(fetchedTask);
 
   if (fetchedTaskError) {
     return NextResponse.json({ error: fetchedTaskError });

@@ -7,30 +7,29 @@ import detailsSVGDark from '../images/go-into-task-dark.svg';
 import Image, { StaticImageData } from 'next/image';
 import { useState } from 'react';
 import Link from 'next/link';
-import { useDispatch, useSelector } from 'react-redux';
-import { IState } from '@/redux-toolkit/store';
 import deleteTaskPNG from '../images/x.png';
 import deleteTaskWhitePNG from '../images/x-white.png';
-import { deleteTask } from '@/redux-toolkit/features/tasks/taskSlice';
+import {
+  Itask,
+  useDeleteTaskMutation,
+} from '@/redux-toolkit/features/api/tasksApiSlice';
+import { useGetSubtasksQuery } from '@/redux-toolkit/features/api/subtasksApiSlice';
 
 interface Props {
-  id: string;
+  task: Itask;
 }
 
-export default function Task({ id }: Props) {
+export default function Task({ task }: Props) {
   const [fireUrl, setFireUrl] = useState(importantStatic);
   const [detailsUrl, setDetailsUrl] = useState(detailsSVG);
   const [deleteUrl, setDeleteUrl] = useState(deleteTaskPNG);
 
-  const dispatch = useDispatch();
-
-  const task = useSelector((state: IState) =>
-    state.tasks.find((t) => t.id === id)
-  );
   if (!task) {
     throw new Error("task doesn't exist");
   }
-  const { title, date, important, subtasks } = task;
+  const { title, date, important, id } = task;
+  const [deleteTask] = useDeleteTaskMutation();
+  const { data: subtasks, isSuccess } = useGetSubtasksQuery(task.id);
 
   function onHover() {
     setFireUrl(importantAnimated);
@@ -50,7 +49,7 @@ export default function Task({ id }: Props) {
           hover:bg-black hover:text-white hover:fill-white"
     >
       <Link
-        href={`/task/${id}`}
+        href={`/task/${task.id}`}
         className="grow"
       >
         <div
@@ -59,11 +58,12 @@ export default function Task({ id }: Props) {
         >
           <div className="px-5">
             <Title
-              title={title}
               important={important}
               imageUrl={fireUrl}
-            />
-            {subtasks.length !== 0 && (
+            >
+              {title}
+            </Title>
+            {isSuccess && subtasks.length !== 0 && (
               <span className="text-lg text-gray-400">
                 {subtasks.length} {`subtask${subtasks.length !== 1 ? 's' : ''}`}
               </span>
@@ -81,13 +81,13 @@ export default function Task({ id }: Props) {
               alt="see task"
               width={20}
             />
-            <span>{new Date(+date).toLocaleDateString()}</span>
+            <span>{new Date(date).toLocaleDateString()}</span>
           </button>
         </div>
       </Link>
       <button
         type="button"
-        onClick={() => dispatch(deleteTask({ id: task.id }))}
+        onClick={() => deleteTask(id)}
       >
         <Image
           src={deleteUrl}
@@ -101,11 +101,11 @@ export default function Task({ id }: Props) {
 
 function Title({
   important,
-  title,
+  children,
   imageUrl,
 }: {
   important: boolean;
-  title: string;
+  children: string;
   imageUrl: StaticImageData;
 }) {
   return (
@@ -121,7 +121,9 @@ function Title({
       )}
       <h3 className="text-2xl self-center">
         {/* TODO make a function that will check for punctuation symbols at the end */}
-        {title.length > 24 ? `${title.slice(0, 24).trimEnd()}...` : title}
+        {children.length > 24
+          ? `${children.slice(0, 24).trimEnd()}...`
+          : children}
       </h3>
     </div>
   );

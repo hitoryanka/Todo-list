@@ -58,11 +58,4 @@ export const initialTasks: Itask[] = [
   },
 ];
 
-export function calculateProgress(subtasks: Isubtask[]): string {
-  const progress =
-    +(
-      subtasks.filter((subtask) => subtask.done).length / subtasks.length
-    ).toFixed(2) * 100;
 
-  return progress.toString();
-}

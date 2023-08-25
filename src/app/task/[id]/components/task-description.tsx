@@ -1,15 +1,18 @@
 import { useContext, useState } from 'react';
-import { TaskContext } from '../page';
+import { context } from '../page';
 import editPNG from '../../../images/editGrey.png';
 import Image from 'next/image';
 import { useDispatch } from 'react-redux';
 import { updateTaskDescription } from '@/redux-toolkit/features/tasks/taskSlice';
+import { useUpdateTaskMutation } from '@/redux-toolkit/features/api/tasksApiSlice';
 
 export default function Description() {
-  const { description, id } = useContext(TaskContext);
+  const {
+    task: { description, id },
+  } = useContext(context);
   const [taskDescription, setTaskDescription] = useState(description);
   const [isDescriptionEditing, setIsDescriptionEditing] = useState(false);
-  const dispatch = useDispatch();
+  const [updateTask] = useUpdateTaskMutation();
 
   function handleDescriptionChange(target: EventTarget & HTMLTextAreaElement) {
     if (target.value.trim()) {
@@ -22,7 +25,7 @@ export default function Description() {
 
   function handleBlur() {
     setIsDescriptionEditing(false);
-    dispatch(updateTaskDescription({ id, description: taskDescription }));
+    updateTask({ id, description: taskDescription });
   }
 
   return (

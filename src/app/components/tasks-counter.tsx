@@ -1,15 +1,10 @@
 'use client';
 
-import { Status } from '@/lib/initialTasks';
-import { IState } from '@/redux-toolkit/store';
 import Image from 'next/image';
-import { useSelector } from 'react-redux';
+import checkmark from '../images/checkmark.svg';
+import { Itask } from '@/redux-toolkit/features/api/tasksApiSlice';
 
-export default function TasksCounter({ checkmark }: { checkmark: string }) {
-  const tasks = useSelector((state: IState) =>
-    [...state.tasks].filter((t) => t.status === Status.done)
-  );
-
+export default function TasksCounter({ tasks }: { tasks: Itask[] }) {
   return (
     <div className="w-90 mx-5 mt-1 bg-yellow-300 rounded-[40px] flex justify-around">
       <span className="text-[180px] font-bold">{tasks.length}</span>

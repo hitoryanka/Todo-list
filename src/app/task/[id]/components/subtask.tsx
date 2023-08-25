@@ -1,18 +1,17 @@
 'use client';
 
 import Image from 'next/image';
-import { useContext, useEffect, useRef, useState } from 'react';
-import { Isubtask } from '@/lib/initialTasks';
+import { useEffect, useRef, useState } from 'react';
+
 import editPNG from '../../../images/edit.png';
 import deletePNG from '../../../images/x.png';
-import { useDispatch } from 'react-redux';
-import {
-  removeSubtask,
-  upadteSubtaskTitle,
-  updateSubtaskStatus,
-} from '@/redux-toolkit/features/tasks/taskSlice';
 import { updateCheckboxStyle } from '@/lib/utils';
-import { TaskContext } from '../page';
+
+import { Isubtask } from '@/redux-toolkit/features/api/tasksApiSlice';
+import {
+  useDeleteSubtaskMutation,
+  useUpdateSubtaskMutation,
+} from '@/redux-toolkit/features/api/subtasksApiSlice';
 
 interface Props {
   task: Isubtask;
@@ -20,23 +19,24 @@ interface Props {
 }
 
 export default function Subtask({ task, removeTask }: Props) {
-  const dispatch = useDispatch();
-
   const [isEditing, setIsEditing] = useState(false);
-  const [currentDescription, setCurrentDescription] = useState(
-    task.description
-  );
+  const [currentTitle, setCurrentTitle] = useState(task.title);
+
+  const [updateSubtask] = useUpdateSubtaskMutation();
+  const [deleteSubtask] = useDeleteSubtaskMutation();
+
   const ref = useRef<HTMLLabelElement>(null);
   useEffect(() => {
     updateCheckboxStyle(ref, task.done);
-  });
+  }, []);
 
-  const { id: parentTaskId } = useContext(TaskContext);
+  // here tasks stands for Parent task, everywhere else - for subtask
 
   function handleBlur() {
     setIsEditing(!isEditing);
+    updateSubtask({ id: task.id, title: currentTitle });
 
-    if (currentDescription === '') {
+    if (currentTitle === '') {
       removeTask(task.id);
     }
   }
@@ -44,29 +44,17 @@ export default function Subtask({ task, removeTask }: Props) {
   function handleKeyPress(key: string) {
     if (key === 'Escape' || key === 'Enter') {
       setIsEditing(false);
+      updateSubtask({ id: task.id, title: currentTitle });
     }
   }
 
   function handleTaskTitleChange(target: EventTarget & HTMLTextAreaElement) {
     target.style.height = `${target.scrollHeight}px`;
-    setCurrentDescription(target.value);
-    dispatch(
-      upadteSubtaskTitle({
-        id: parentTaskId,
-        subtaskId: task.id,
-        title: currentDescription,
-      })
-    );
+    setCurrentTitle(target.value);
   }
 
   function handleTaskDone() {
-    dispatch(
-      updateSubtaskStatus({
-        id: parentTaskId,
-        subtaskId: task.id,
-        done: !task.done,
-      })
-    );
+    updateSubtask({ id: task.id, done: !task.done });
   }
 
   return (
@@ -75,28 +63,25 @@ export default function Subtask({ task, removeTask }: Props) {
         <div className="flex">
           <input
             type="checkbox"
-            id={task.id}
+            id={task.id.toString()}
             checked={task.done}
             onChange={handleTaskDone}
             className="appearance-none"
           />
           <label
             ref={ref}
-            htmlFor={task.id}
+            htmlFor={task.id.toString()}
             className="inline-block rounded-full w-7 h-7 self-center"
           />
         </div>
         {/* TODO crossing out animation */}
         <h2 className="grow w-full self-start">
           {!isEditing ? (
-            <Description
-              isDone={task.done}
-              description={currentDescription}
-            />
+            <Description isDone={task.done}>{currentTitle}</Description>
           ) : (
             <textarea
               onBlur={handleBlur}
-              value={currentDescription}
+              value={currentTitle}
               onChange={({ target }) => handleTaskTitleChange(target)}
               onKeyDown={(event) => handleKeyPress(event.key)}
               className=" rounded-lg px-1 focus:border-yellow-300 resize-none overflow-hidden w-full"
@@ -123,9 +108,7 @@ export default function Subtask({ task, removeTask }: Props) {
         </button>
         <button
           type="button"
-          onClick={() =>
-            dispatch(removeSubtask({ id: parentTaskId, subtaskId: task.id }))
-          }
+          onClick={() => deleteSubtask(task.id)}
         >
           <Image
             src={deletePNG}
@@ -140,13 +123,13 @@ export default function Subtask({ task, removeTask }: Props) {
 
 interface DescriptionProps {
   isDone: boolean;
-  description: string;
+  children: string;
 }
 
-function Description({ isDone, description }: DescriptionProps) {
+function Description({ isDone, children }: DescriptionProps) {
   return isDone ? (
-    <p className="text-gray-400 line-through break-words">{description}</p>
+    <p className="text-gray-400 line-through break-words">{children}</p>
   ) : (
-    <p>{description}</p>
+    <p>{children}</p>
   );
 }

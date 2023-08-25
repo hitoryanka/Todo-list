@@ -10,7 +10,7 @@ export enum Status {
 export interface Itask {
   id: number;
   title: string;
-  date: Date;
+  date: string;
   description: string;
   important: boolean;
   status: Status;
@@ -35,6 +35,9 @@ export const TasksApiSlice = createApi({
       query: () => '/tasks',
       transformResponse: (res: Itask[]) => res.sort((a, b) => a.id - b.id),
       providesTags: ['tasks'],
+    }),
+    getSingleTask: builder.query<Itask, number>({
+      query: (id: number) => `/tasks/${id}`,
     }),
     addTask: builder.mutation({
       query: (title: string) => ({
@@ -64,6 +67,7 @@ export const TasksApiSlice = createApi({
 
 export const {
   useGetTasksQuery,
+  useGetSingleTaskQuery,
   useAddTaskMutation,
   useDeleteTaskMutation,
   useUpdateTaskMutation,

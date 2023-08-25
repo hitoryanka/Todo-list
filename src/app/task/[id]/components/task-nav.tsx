@@ -1,14 +1,17 @@
 import Link from 'next/link';
 import { useContext, useRef } from 'react';
 import { useDispatch } from 'react-redux';
-import { TaskContext } from '../page';
+import { context } from '../page';
 import { handleDropDown } from '@/lib/utils';
 import { updateTaskStatus } from '@/redux-toolkit/features/tasks/taskSlice';
 import { Status } from '@/lib/initialTasks';
+import { useUpdateTaskMutation } from '@/redux-toolkit/features/api/tasksApiSlice';
 
 export default function TaskNav() {
-  const dispatch = useDispatch();
-  const { id, status } = useContext(TaskContext);
+  const [updateTask] = useUpdateTaskMutation();
+  const {
+    task: { id, status },
+  } = useContext(context);
 
   const ref = useRef<HTMLElement>(null);
 
@@ -41,9 +44,7 @@ export default function TaskNav() {
             <li className="hover:bg-blue-500 rounded-t-md p-1">
               <button
                 type="button"
-                onClick={() =>
-                  dispatch(updateTaskStatus({ id, status: Status.inProcess }))
-                }
+                onClick={() => updateTask({ id, status: Status.inProcess })}
               >
                 in Process
               </button>
@@ -51,9 +52,7 @@ export default function TaskNav() {
             <li className="hover:bg-blue-500 p-1">
               <button
                 type="button"
-                onClick={() =>
-                  dispatch(updateTaskStatus({ id, status: Status.done }))
-                }
+                onClick={() => updateTask({ id, status: Status.done })}
               >
                 Done
               </button>
@@ -61,9 +60,7 @@ export default function TaskNav() {
             <li className="hover:bg-blue-500 rounded-b-md p-1">
               <button
                 type="button"
-                onClick={() =>
-                  dispatch(updateTaskStatus({ id, status: Status.archived }))
-                }
+                onClick={() => updateTask({ id, status: Status.archived })}
               >
                 Archived
               </button>

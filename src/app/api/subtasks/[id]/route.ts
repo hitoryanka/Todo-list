@@ -28,9 +28,7 @@ export async function POST(
 
   if (!parsedId) {
     return NextResponse.json('Provided Task id is invalid');
-  }
-
-  if (!title) {
+  } else if (!title) {
     return NextResponse.json({ message: 'Title required' });
   }
 

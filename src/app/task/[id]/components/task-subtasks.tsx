@@ -5,29 +5,17 @@ import AddSubtask from './add-subtask';
 import Subtask from './subtask';
 import { useDispatch } from 'react-redux';
 import { useContext, useRef } from 'react';
-import {
-  addSubtask,
-  sortSubtasks,
-} from '@/redux-toolkit/features/tasks/taskSlice';
-import { TaskContext } from '../page';
+
 import Image from 'next/image';
 import { handleDropDown } from '@/lib/utils';
+import { Isubtask } from '@/redux-toolkit/features/api/tasksApiSlice';
 
-export default function TaskSubtasks() {
-  const dispatch = useDispatch();
-  const { id: taskId, subtasks } = useContext(TaskContext);
-
+export default function TaskSubtasks({ subtasks }: { subtasks: Isubtask[] }) {
   const ref = useRef<HTMLElement>(null);
 
   function handleAddSubtask() {
-    const newTask = {
-      id: Date.now().toString(),
-      description: 'create title',
-      done: false,
-    };
     // TODO make task pagination by making side-scrollable table of tasks
     //  you can scroll it with finger using smartphone
-    dispatch(addSubtask({ id: taskId, subtask: newTask }));
   }
 
   return (
@@ -60,9 +48,7 @@ export default function TaskSubtasks() {
                   <button
                     className="mx-1"
                     type="button"
-                    onClick={() =>
-                      dispatch(sortSubtasks({ id: taskId, sortType: 'done' }))
-                    }
+                    onClick={() => console.log('sorting subtasks')}
                   >
                     Done
                   </button>
@@ -71,11 +57,7 @@ export default function TaskSubtasks() {
                   <button
                     className="mx-1"
                     type="button"
-                    onClick={() =>
-                      dispatch(
-                        sortSubtasks({ id: taskId, sortType: 'pending' })
-                      )
-                    }
+                    onClick={() => console.log('sorting subtasks')}
                   >
                     Pending
                   </button>
@@ -84,9 +66,7 @@ export default function TaskSubtasks() {
                   <button
                     className="mx-1"
                     type="button"
-                    onClick={() =>
-                      dispatch(sortSubtasks({ id: taskId, sortType: 'new' }))
-                    }
+                    onClick={() => console.log('sorting subtasks')}
                   >
                     New
                   </button>

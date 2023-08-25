@@ -8,13 +8,17 @@ import importantStatic from '../../../images/important-fire-static.png';
 import importantOutline from '../../../images/important-fire-outline.png';
 import editPNG from '../../../images/editWhite.png';
 import { useContext, useState } from 'react';
-import { TaskContext } from '../page';
+import { context } from '../page';
+import { useUpdateTaskMutation } from '@/redux-toolkit/features/api/tasksApiSlice';
 
 export default function TaskTitle() {
-  const { important, title, id } = useContext(TaskContext);
+  const {
+    task: { important, title, id },
+  } = useContext(context);
   const dispatch = useDispatch();
   const [isTitleEditing, setIsTitleEditing] = useState(false);
   const [taskTitle, setTaskTitle] = useState(title);
+  const [updateTask] = useUpdateTaskMutation();
 
   function handleTitleChange(target: EventTarget & HTMLTextAreaElement) {
     if (target.value.trim()) {
@@ -27,13 +31,13 @@ export default function TaskTitle() {
 
   function handleTitleSubmit(key: string) {
     if (key === 'Escape' || key === 'Enter') {
-      dispatch(updateTaskTitle({ id, title: taskTitle }));
+      updateTask({ id, title: taskTitle });
     }
   }
 
   function handleBlur() {
     setIsTitleEditing(false);
-    dispatch(updateTaskTitle({ id, title: taskTitle }));
+    updateTask({ id, title: taskTitle });
   }
 
   return (
@@ -42,9 +46,7 @@ export default function TaskTitle() {
         <button
           type="button"
           className="shrink-0 self-start flex"
-          onClick={() =>
-            dispatch(updateImportantTask({ id, important: !important }))
-          }
+          onClick={() => updateTask({ id, important: !important })}
         >
           <Image
             className="inline w-10 self-start"

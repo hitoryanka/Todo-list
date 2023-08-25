@@ -1,3 +1,4 @@
+import { Isubtask } from '@/redux-toolkit/features/api/tasksApiSlice';
 import checkedPNG from '../app/images/checked.png';
 
 export function handleDropDown(
@@ -35,4 +36,13 @@ export function updateCheckboxStyle(
       ref.current.style.background = 'rgb(209 213 219)';
     }
   }
+}
+
+export function calculateProgress(subtasks: Isubtask[]): string {
+  const progress =
+    +(
+      subtasks.filter((subtask) => subtask.done).length / subtasks.length
+    ).toFixed(2) * 100;
+
+  return progress.toString();
 }

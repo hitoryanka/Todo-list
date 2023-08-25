@@ -1,39 +1,55 @@
 'use client';
 
-import { Itask, Status } from '@/lib/initialTasks';
 import { createContext } from 'react';
 import { useSelector } from 'react-redux';
 import TaskSubtasks from './components/task-subtasks';
-import { IState } from '@/redux-toolkit/store';
 import TaskHeader from './components/task';
-import { ApiProvider } from '@reduxjs/toolkit/dist/query/react';
-import { SubtasksApiSlice } from '@/redux-toolkit/features/api/subtasksApiSlice';
 
-export const TaskContext = createContext<Itask>({
-  id: '1',
-  title: 'Brush teeth',
-  date: 'may 17th',
-  description: "gotta keep'em clean!",
-  important: true,
-  status: Status.inProcess,
+import { useGetSubtasksQuery } from '@/redux-toolkit/features/api/subtasksApiSlice';
+import {
+  Isubtask,
+  Status,
+  Itask,
+  useGetSingleTaskQuery,
+} from '@/redux-toolkit/features/api/tasksApiSlice';
+import { ST } from 'next/dist/shared/lib/utils';
+
+export const context = createContext<{ task: Itask; subtasks: Isubtask[] }>({
+  task: {
+    id: 0,
+    title: "doesn't exist",
+    status: Status.inProcess,
+    date: 'none',
+    description: 'none',
+    important: false,
+  },
   subtasks: [],
 });
 
 export default function Page({ params }: { params: { id: string } }) {
-  const task = useSelector((state: IState) =>
-    state.tasks.find((task) => task.id === params.id)
-  );
-  if (!task) {
+  const {
+    data: task,
+    isError: isTaskError,
+    isSuccess: isTaskSuccess,
+  } = useGetSingleTaskQuery(+params.id);
+  const {
+    data: subtasks,
+    isLoading,
+    isError,
+    isSuccess,
+  } = useGetSubtasksQuery(+params.id);
+  if (isTaskError || isError) {
     return <h1 className="text-white">no such task</h1>;
-  }
-  return (
-    <ApiProvider api={SubtasksApiSlice}>
-      <TaskContext.Provider value={task}>
+  } else if (isLoading) {
+    return <p>loading...</p>;
+  } else if (isSuccess && isTaskSuccess) {
+    return (
+      <context.Provider value={{ task, subtasks }}>
         <article className="flex-1 flex-col h-full font-light">
           <TaskHeader />
-          <TaskSubtasks />
+          <TaskSubtasks subtasks={subtasks} />
         </article>
-      </TaskContext.Provider>
-    </ApiProvider>
-  );
+      </context.Provider>
+    );
+  }
 }

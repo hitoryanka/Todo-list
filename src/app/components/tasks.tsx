@@ -1,31 +1,19 @@
 'use client';
 
 import CreateTask from './createTask';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 import filterSVG from '../images/filter.png';
 import Image from 'next/image';
 import Task from './task';
-import { IState } from '@/redux-toolkit/store';
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import { handleDropDown } from '@/lib/utils';
 import { sortTasks } from '@/redux-toolkit/features/tasks/taskSlice';
-import {
-  Status,
-  useAddTaskMutation,
-  useDeleteTaskMutation,
-  useGetTasksQuery,
-  useUpdateTaskMutation,
-} from '@/redux-toolkit/features/api/tasksApiSlice';
+import { Itask } from '@/redux-toolkit/features/api/tasksApiSlice';
 
-export default function Tasks() {
-  const tasks = useSelector((state: IState) => state.tasks);
-  const { data, isLoading, isSuccess, isError, error } = useGetTasksQuery();
-  const [updateTask] = useUpdateTaskMutation();
-  useEffect(() => {
-    // deleteTask(6);
-    updateTask({ id: 14, status: Status.done });
-  }, []);
+export default function Tasks({ tasks }: { tasks: Itask[] }) {
+  // const tasks = useSelector((state: IState) => state.tasks);
+  // use these methods to create loader and check for errors
 
   const dispatch = useDispatch();
   const ref = useRef<HTMLElement>(null);
@@ -100,12 +88,13 @@ export default function Tasks() {
           </div>
         </header>
         <main className="h-[45vh] overflow-scroll no-scrollbar">
-          {tasks.map((task) => (
-            <Task
-              key={task.id}
-              id={task.id}
-            />
-          ))}
+          {tasks &&
+            tasks.map((task) => (
+              <Task
+                key={task.id}
+                task={task}
+              />
+            ))}
         </main>
       </div>
     </main>

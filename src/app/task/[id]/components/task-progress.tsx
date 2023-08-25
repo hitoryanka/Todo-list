@@ -1,18 +1,24 @@
-import { Status, calculateProgress } from '@/lib/initialTasks';
+import { Status } from '@/lib/initialTasks';
 import { updateTaskStatus } from '@/redux-toolkit/features/tasks/taskSlice';
 import { useContext } from 'react';
 import { useDispatch } from 'react-redux';
-import { TaskContext } from '../page';
+import { context } from '../page';
+import { useUpdateTaskMutation } from '@/redux-toolkit/features/api/tasksApiSlice';
+import { calculateProgress } from '@/lib/utils';
 
 export default function TaskProgress() {
-  const dispatch = useDispatch();
-  const { id, subtasks, status } = useContext(TaskContext);
+  const [updateTask] = useUpdateTaskMutation();
+
+  const {
+    task: { id, status },
+    subtasks,
+  } = useContext(context);
   const progress = calculateProgress(subtasks);
   if (status !== Status.archived) {
     if (status !== Status.done && progress === '100') {
-      dispatch(updateTaskStatus({ id, status: Status.done }));
+      updateTask({ id, status: Status.done });
     } else if (status !== Status.inProcess && progress !== '100') {
-      dispatch(updateTaskStatus({ id, status: Status.inProcess }));
+      updateTask({ id, status: Status.inProcess });
     }
   }
   return (

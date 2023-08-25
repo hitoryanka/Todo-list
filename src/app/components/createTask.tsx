@@ -1,14 +1,13 @@
 'use client';
 
-import { addTask } from '@/redux-toolkit/features/tasks/taskSlice';
 import addTaskPNG from '../images/addTask.png';
 import Image from 'next/image';
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useAddTaskMutation } from '@/redux-toolkit/features/api/tasksApiSlice';
 
 export default function CreateTask() {
   const [title, setTitle] = useState('');
-  const dispatch = useDispatch();
+  const [addTask] = useAddTaskMutation();
 
   function handleDescriptionChange(target: EventTarget & HTMLTextAreaElement) {
     if (target.value.trim()) {
@@ -21,7 +20,8 @@ export default function CreateTask() {
 
   function handleTitleSubmit() {
     setTitle('');
-    dispatch(addTask({ title }));
+
+    addTask(title);
   }
 
   return (
