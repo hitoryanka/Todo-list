@@ -5,15 +5,27 @@ import { context } from '../page';
 import { handleDropDown } from '@/lib/utils';
 import { updateTaskStatus } from '@/redux-toolkit/features/tasks/taskSlice';
 import { Status } from '@/lib/initialTasks';
-import { useUpdateTaskMutation } from '@/redux-toolkit/features/api/tasksApiSlice';
+import {
+  Itask,
+  useUpdateTaskMutation,
+} from '@/redux-toolkit/features/api/tasksApiSlice';
 
 export default function TaskNav() {
   const [updateTask] = useUpdateTaskMutation();
   const {
     task: { id, status },
+    setTask,
   } = useContext(context);
 
   const ref = useRef<HTMLElement>(null);
+
+  function handleStatus(newStatus: Status) {
+    setTask((prevState: Itask) => ({
+      ...prevState,
+      status: newStatus,
+    }));
+    updateTask({ id, status: newStatus });
+  }
 
   return (
     <nav className="flex justify-between mb-5">
@@ -44,25 +56,17 @@ export default function TaskNav() {
             <li className="hover:bg-blue-500 rounded-t-md p-1">
               <button
                 type="button"
-                onClick={() => updateTask({ id, status: Status.inProcess })}
+                onClick={() => handleStatus(Status.inProcess)}
               >
                 in Process
-              </button>
-            </li>
-            <li className="hover:bg-blue-500 p-1">
-              <button
-                type="button"
-                onClick={() => updateTask({ id, status: Status.done })}
-              >
-                Done
               </button>
             </li>
             <li className="hover:bg-blue-500 rounded-b-md p-1">
               <button
                 type="button"
-                onClick={() => updateTask({ id, status: Status.archived })}
+                onClick={() => handleStatus(Status.done)}
               >
-                Archived
+                Done
               </button>
             </li>
           </ul>

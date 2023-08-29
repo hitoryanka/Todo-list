@@ -9,6 +9,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import deleteTaskPNG from '../images/x.png';
 import deleteTaskWhitePNG from '../images/x-white.png';
+
 import {
   Itask,
   useDeleteTaskMutation,
@@ -49,7 +50,10 @@ export default function Task({ task }: Props) {
           hover:bg-black hover:text-white hover:fill-white"
     >
       <Link
-        href={`/task/${task.id}`}
+        href={{
+          pathname: `/task/${task.id}`,
+          query: { task: JSON.stringify(task) },
+        }}
         className="grow"
       >
         <div

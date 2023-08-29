@@ -1,21 +1,20 @@
 import Image from 'next/image';
-import { useDispatch } from 'react-redux';
-import {
-  updateImportantTask,
-  updateTaskTitle,
-} from '@/redux-toolkit/features/tasks/taskSlice';
 import importantStatic from '../../../images/important-fire-static.png';
 import importantOutline from '../../../images/important-fire-outline.png';
 import editPNG from '../../../images/editWhite.png';
 import { useContext, useState } from 'react';
 import { context } from '../page';
-import { useUpdateTaskMutation } from '@/redux-toolkit/features/api/tasksApiSlice';
+import {
+  Itask,
+  useUpdateTaskMutation,
+} from '@/redux-toolkit/features/api/tasksApiSlice';
 
 export default function TaskTitle() {
   const {
     task: { important, title, id },
+    setTask,
   } = useContext(context);
-  const dispatch = useDispatch();
+  const [isImportant, setIsImportant] = useState(important);
   const [isTitleEditing, setIsTitleEditing] = useState(false);
   const [taskTitle, setTaskTitle] = useState(title);
   const [updateTask] = useUpdateTaskMutation();
@@ -31,13 +30,22 @@ export default function TaskTitle() {
 
   function handleTitleSubmit(key: string) {
     if (key === 'Escape' || key === 'Enter') {
+      setIsTitleEditing(false);
+
       updateTask({ id, title: taskTitle });
     }
   }
 
-  function handleBlur() {
+  function handleStopTitleEdit() {
     setIsTitleEditing(false);
+    setTask((prevState: Itask) => ({ ...prevState, title: taskTitle }));
     updateTask({ id, title: taskTitle });
+  }
+
+  function handleImportant() {
+    setIsImportant((prev) => !prev);
+    setTask((prevState: Itask) => ({ ...prevState, important: !isImportant }));
+    updateTask({ id, important: !isImportant });
   }
 
   return (
@@ -46,11 +54,11 @@ export default function TaskTitle() {
         <button
           type="button"
           className="shrink-0 self-start flex"
-          onClick={() => updateTask({ id, important: !important })}
+          onClick={handleImportant}
         >
           <Image
             className="inline w-10 self-start"
-            src={important ? importantStatic : importantOutline}
+            src={isImportant ? importantStatic : importantOutline}
             alt="important"
           />
         </button>
@@ -61,7 +69,7 @@ export default function TaskTitle() {
               rows={1}
               className="bg-black resize-none overflow-hidden w-full"
               autoFocus
-              onBlur={handleBlur}
+              onBlur={handleStopTitleEdit}
               onFocus={({ target }) =>
                 (target.style.height = `${target.scrollHeight}px`)
               }

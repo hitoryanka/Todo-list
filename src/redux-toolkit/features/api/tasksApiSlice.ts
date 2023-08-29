@@ -61,6 +61,7 @@ export const TasksApiSlice = createApi({
         method: 'PATCH',
         body: { task },
       }),
+      invalidatesTags: ['tasks'],
     }),
   }),
 });

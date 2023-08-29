@@ -3,20 +3,27 @@
 import filterPNG from '../../../images/filter.png';
 import AddSubtask from './add-subtask';
 import Subtask from './subtask';
-import { useDispatch } from 'react-redux';
 import { useContext, useRef } from 'react';
-
 import Image from 'next/image';
 import { handleDropDown } from '@/lib/utils';
-import { Isubtask } from '@/redux-toolkit/features/api/tasksApiSlice';
+import { context } from '../page';
+import { useAddSubtaskMutation } from '@/redux-toolkit/features/api/subtasksApiSlice';
 
-export default function TaskSubtasks({ subtasks }: { subtasks: Isubtask[] }) {
+export default function TaskSubtasks() {
   const ref = useRef<HTMLElement>(null);
+
+  const [addSubtask] = useAddSubtaskMutation();
 
   function handleAddSubtask() {
     // TODO make task pagination by making side-scrollable table of tasks
     //  you can scroll it with finger using smartphone
+    addSubtask(id);
   }
+
+  const {
+    subtasks,
+    task: { id },
+  } = useContext(context);
 
   return (
     <section className="relative flex flex-col justify-between mx-2 bg-white rounded-3xl mt-40 ">

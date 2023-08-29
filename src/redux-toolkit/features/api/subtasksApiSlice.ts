@@ -16,10 +16,10 @@ export const SubtasksApiSlice = createApi({
       providesTags: ['subtasks'],
     }),
     addSubtask: builder.mutation({
-      query: ({ id, title }: { id: number; title: string }) => ({
+      query: (id: number) => ({
         url: `/subtasks/${id}`,
         method: 'POST',
-        body: { title },
+        body: { title: 'Create Title' },
       }),
       invalidatesTags: ['subtasks'],
     }),
@@ -37,6 +37,7 @@ export const SubtasksApiSlice = createApi({
         method: 'PATCH',
         body: subtask,
       }),
+      invalidatesTags: ['subtasks'],
     }),
   }),
 });

@@ -1,26 +1,37 @@
-import { Status } from '@/lib/initialTasks';
-import { updateTaskStatus } from '@/redux-toolkit/features/tasks/taskSlice';
-import { useContext } from 'react';
-import { useDispatch } from 'react-redux';
+'use client';
+
+import { useContext, useEffect, useState } from 'react';
 import { context } from '../page';
-import { useUpdateTaskMutation } from '@/redux-toolkit/features/api/tasksApiSlice';
+import {
+  Itask,
+  Status,
+  useUpdateTaskMutation,
+} from '@/redux-toolkit/features/api/tasksApiSlice';
 import { calculateProgress } from '@/lib/utils';
 
 export default function TaskProgress() {
   const [updateTask] = useUpdateTaskMutation();
-
   const {
     task: { id, status },
+    setTask,
     subtasks,
   } = useContext(context);
+
   const progress = calculateProgress(subtasks);
-  if (status !== Status.archived) {
-    if (status !== Status.done && progress === '100') {
+
+  useEffect(() => {
+    if (progress === '100' && status === Status.inProcess) {
+      setTask((prevState: Itask) => ({ ...prevState, status: Status.done }));
       updateTask({ id, status: Status.done });
-    } else if (status !== Status.inProcess && progress !== '100') {
+    } else if (progress !== '100' && status === Status.done) {
+      setTask((prevState: Itask) => ({
+        ...prevState,
+        status: Status.inProcess,
+      }));
       updateTask({ id, status: Status.inProcess });
     }
-  }
+  }, [progress]);
+
   return (
     <>
       <h2 className="text-gray-300 mb-6">

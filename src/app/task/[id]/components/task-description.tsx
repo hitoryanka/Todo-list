@@ -2,13 +2,13 @@ import { useContext, useState } from 'react';
 import { context } from '../page';
 import editPNG from '../../../images/editGrey.png';
 import Image from 'next/image';
-import { useDispatch } from 'react-redux';
-import { updateTaskDescription } from '@/redux-toolkit/features/tasks/taskSlice';
 import { useUpdateTaskMutation } from '@/redux-toolkit/features/api/tasksApiSlice';
+import { Itask } from '@/lib/initialTasks';
 
 export default function Description() {
   const {
     task: { description, id },
+    setTask,
   } = useContext(context);
   const [taskDescription, setTaskDescription] = useState(description);
   const [isDescriptionEditing, setIsDescriptionEditing] = useState(false);
@@ -25,6 +25,10 @@ export default function Description() {
 
   function handleBlur() {
     setIsDescriptionEditing(false);
+    setTask((prevState: Itask) => ({
+      ...prevState,
+      description: taskDescription,
+    }));
     updateTask({ id, description: taskDescription });
   }
 

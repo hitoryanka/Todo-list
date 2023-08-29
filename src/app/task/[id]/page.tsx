@@ -1,10 +1,8 @@
 'use client';
 
-import { createContext } from 'react';
-import { useSelector } from 'react-redux';
+import { SetStateAction, createContext, useState } from 'react';
 import TaskSubtasks from './components/task-subtasks';
 import TaskHeader from './components/task';
-
 import { useGetSubtasksQuery } from '@/redux-toolkit/features/api/subtasksApiSlice';
 import {
   Isubtask,
@@ -12,9 +10,12 @@ import {
   Itask,
   useGetSingleTaskQuery,
 } from '@/redux-toolkit/features/api/tasksApiSlice';
-import { ST } from 'next/dist/shared/lib/utils';
 
-export const context = createContext<{ task: Itask; subtasks: Isubtask[] }>({
+export const context = createContext<{
+  task: Itask;
+  setTask: Function;
+  subtasks: Isubtask[];
+}>({
   task: {
     id: 0,
     title: "doesn't exist",
@@ -23,31 +24,36 @@ export const context = createContext<{ task: Itask; subtasks: Isubtask[] }>({
     description: 'none',
     important: false,
   },
+  setTask: () => {},
   subtasks: [],
 });
 
-export default function Page({ params }: { params: { id: string } }) {
-  const {
-    data: task,
-    isError: isTaskError,
-    isSuccess: isTaskSuccess,
-  } = useGetSingleTaskQuery(+params.id);
+export default function Page({
+  params,
+  searchParams,
+}: {
+  params: { id: string };
+  searchParams: { task: string };
+}) {
+  const [task, setTask] = useState<Itask>(JSON.parse(searchParams.task));
+
   const {
     data: subtasks,
     isLoading,
     isError,
     isSuccess,
   } = useGetSubtasksQuery(+params.id);
-  if (isTaskError || isError) {
+
+  if (isError) {
     return <h1 className="text-white">no such task</h1>;
   } else if (isLoading) {
     return <p>loading...</p>;
-  } else if (isSuccess && isTaskSuccess) {
+  } else if (isSuccess) {
     return (
-      <context.Provider value={{ task, subtasks }}>
+      <context.Provider value={{ task, setTask, subtasks }}>
         <article className="flex-1 flex-col h-full font-light">
           <TaskHeader />
-          <TaskSubtasks subtasks={subtasks} />
+          <TaskSubtasks />
         </article>
       </context.Provider>
     );

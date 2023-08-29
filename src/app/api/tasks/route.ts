@@ -19,7 +19,11 @@ export async function DELETE(request: Request) {
     return NextResponse.json({ message: 'Task id required' });
   }
 
-  const response = await supabase.from('Tasks').delete().eq('id', id);
+  const { error } = await supabase.from('Tasks').delete().eq('id', id);
+
+  if (error) {
+    return NextResponse.json({ error });
+  }
 
   return NextResponse.json({ message: `Task with id=${id} was deleted` });
 }

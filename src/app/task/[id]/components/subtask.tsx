@@ -28,7 +28,7 @@ export default function Subtask({ task, removeTask }: Props) {
   const ref = useRef<HTMLLabelElement>(null);
   useEffect(() => {
     updateCheckboxStyle(ref, task.done);
-  }, []);
+  }, [task.done]);
 
   // here tasks stands for Parent task, everywhere else - for subtask
 
@@ -37,7 +37,7 @@ export default function Subtask({ task, removeTask }: Props) {
     updateSubtask({ id: task.id, title: currentTitle });
 
     if (currentTitle === '') {
-      removeTask(task.id);
+      deleteSubtask(task.id);
     }
   }
   // BUG put this function into utils folder
