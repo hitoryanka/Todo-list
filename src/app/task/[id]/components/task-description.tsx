@@ -2,8 +2,10 @@ import { useContext, useState } from 'react';
 import { context } from '../page';
 import editPNG from '../../../images/editGrey.png';
 import Image from 'next/image';
-import { useUpdateTaskMutation } from '@/redux-toolkit/features/api/tasksApiSlice';
-import { Itask } from '@/lib/initialTasks';
+import {
+  Itask,
+  useUpdateTaskMutation,
+} from '@/redux-toolkit/features/api/tasksApiSlice';
 
 export default function Description() {
   const {
@@ -49,7 +51,7 @@ export default function Description() {
             autoFocus
           />
         ) : (
-          <p className="text-gray-400 text-xl break-words">
+          <p className="text-gray-400 text-xl break-all">
             {taskDescription || 'provide description to a task'}
           </p>
         )}

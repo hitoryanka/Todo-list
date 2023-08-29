@@ -3,16 +3,37 @@
 import filterPNG from '../../../images/filter.png';
 import AddSubtask from './add-subtask';
 import Subtask from './subtask';
-import { useContext, useRef } from 'react';
+import { useContext, useRef, useState, useMemo } from 'react';
 import Image from 'next/image';
 import { handleDropDown } from '@/lib/utils';
 import { context } from '../page';
-import { useAddSubtaskMutation } from '@/redux-toolkit/features/api/subtasksApiSlice';
+import {
+  useAddSubtaskMutation,
+  useDeleteSubtaskMutation,
+} from '@/redux-toolkit/features/api/subtasksApiSlice';
 
 export default function TaskSubtasks() {
   const ref = useRef<HTMLElement>(null);
+  const [filter, setFilter] = useState<'all' | 'done' | 'pending'>('all');
+
+  const {
+    subtasks,
+    task: { id },
+  } = useContext(context);
+
+  const subtasksToRender = useMemo(() => {
+    switch (filter) {
+      case 'all':
+        return subtasks;
+      case 'pending':
+        return [...subtasks].filter((task) => !task.done);
+      case 'done':
+        return [...subtasks].filter((task) => task.done);
+    }
+  }, [filter, subtasks]);
 
   const [addSubtask] = useAddSubtaskMutation();
+  const [deleteSubtask] = useDeleteSubtaskMutation();
 
   function handleAddSubtask() {
     // TODO make task pagination by making side-scrollable table of tasks
@@ -20,13 +41,8 @@ export default function TaskSubtasks() {
     addSubtask(id);
   }
 
-  const {
-    subtasks,
-    task: { id },
-  } = useContext(context);
-
   return (
-    <section className="relative flex flex-col justify-between mx-2 bg-white rounded-3xl mt-40 ">
+    <section className="relative flex flex-col justify-between mx-2 bg-white rounded-3xl mt-40">
       <div>
         <nav className="flex justify-between">
           <h2 className="text-3xl mx-5 mt-5">All subtasks</h2>
@@ -55,16 +71,18 @@ export default function TaskSubtasks() {
                   <button
                     className="mx-1"
                     type="button"
-                    onClick={() => console.log('sorting subtasks')}
+                    disabled={filter === 'all'}
+                    onClick={() => setFilter('all')}
                   >
-                    Done
+                    All
                   </button>
                 </li>
                 <li className="hover:bg-blue-600 active:bg-blue-400">
                   <button
                     className="mx-1"
                     type="button"
-                    onClick={() => console.log('sorting subtasks')}
+                    disabled={filter === 'pending'}
+                    onClick={() => setFilter('pending')}
                   >
                     Pending
                   </button>
@@ -73,29 +91,30 @@ export default function TaskSubtasks() {
                   <button
                     className="mx-1"
                     type="button"
-                    onClick={() => console.log('sorting subtasks')}
+                    disabled={filter === 'done'}
+                    onClick={() => setFilter('done')}
                   >
-                    New
+                    Done
                   </button>
                 </li>
               </ul>
             </section>
           </div>
         </nav>
-        <ul className="flex flex-col gap-3 mt-5 px-10 h-[45vh] overflow-scroll no-scrollbar">
-          {subtasks.map((t) => {
+        <ul className="flex flex-col gap-3 mt-5 px-10 h-[45vh]">
+          {subtasksToRender.map((t) => {
             return (
               <Subtask
                 task={t}
                 key={t.id}
-                removeTask={() => console.log("I'm not deleting anything yet!")}
+                removeTask={() => deleteSubtask(t.id)}
               />
             );
           })}
         </ul>
       </div>
 
-      <AddSubtask onAdd={() => handleAddSubtask()} />
+      <AddSubtask onAdd={handleAddSubtask} />
     </section>
   );
 }

@@ -78,7 +78,7 @@ export default function TaskTitle() {
               onKeyDown={({ key }) => handleTitleSubmit(key)}
             />
           ) : (
-            <header className="break-words">{taskTitle}</header>
+            <header className="break-all">{taskTitle}</header>
           )}
         </h1>
       </section>

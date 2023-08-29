@@ -1,22 +1,34 @@
 'use client';
 
 import CreateTask from './createTask';
-import { useDispatch } from 'react-redux';
-
 import filterSVG from '../images/filter.png';
 import Image from 'next/image';
 import Task from './task';
-import { useRef } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { handleDropDown } from '@/lib/utils';
-import { sortTasks } from '@/redux-toolkit/features/tasks/taskSlice';
-import { Itask } from '@/redux-toolkit/features/api/tasksApiSlice';
+import { Itask, Status } from '@/redux-toolkit/features/api/tasksApiSlice';
 
 export default function Tasks({ tasks }: { tasks: Itask[] }) {
   // const tasks = useSelector((state: IState) => state.tasks);
   // use these methods to create loader and check for errors
 
-  const dispatch = useDispatch();
   const ref = useRef<HTMLElement>(null);
+  const [filter, setFilter] = useState<
+    'all' | 'important' | 'done' | 'pending'
+  >('all');
+
+  const tasksToRender = useMemo(() => {
+    switch (filter) {
+      case 'all':
+        return tasks;
+      case 'pending':
+        return [...tasks].filter((task) => task.status === Status.inProcess);
+      case 'done':
+        return [...tasks].filter((task) => task.status === Status.done);
+      case 'important':
+        return [...tasks].filter((task) => task.important);
+    }
+  }, [filter, tasks]);
 
   return (
     <main className="w-90 mx-5 mt-1">
@@ -49,9 +61,7 @@ export default function Tasks({ tasks }: { tasks: Itask[] }) {
                   <button
                     className="mx-1"
                     type="button"
-                    onClick={() =>
-                      dispatch(sortTasks({ sortType: 'important' }))
-                    }
+                    onClick={() => setFilter('important')}
                   >
                     Important
                   </button>
@@ -60,27 +70,27 @@ export default function Tasks({ tasks }: { tasks: Itask[] }) {
                   <button
                     className="mx-1"
                     type="button"
-                    onClick={() => dispatch(sortTasks({ sortType: 'pending' }))}
+                    onClick={() => setFilter('all')}
+                  >
+                    All
+                  </button>
+                </li>
+                <li className="hover:bg-blue-600 active:bg-blue-400">
+                  <button
+                    className="mx-1"
+                    type="button"
+                    onClick={() => setFilter('pending')}
                   >
                     Pending
                   </button>
                 </li>
-                <li className="hover:bg-blue-600 active:bg-blue-400">
+                <li className="hover:bg-blue-600 active:bg-blue-400 rounded-b-md">
                   <button
                     className="mx-1"
                     type="button"
-                    onClick={() => dispatch(sortTasks({ sortType: 'done' }))}
+                    onClick={() => setFilter('done')}
                   >
                     Done
-                  </button>
-                </li>
-                <li className="hover:bg-blue-600 active:bg-blue-400">
-                  <button
-                    className="mx-1"
-                    type="button"
-                    onClick={() => dispatch(sortTasks({ sortType: 'new' }))}
-                  >
-                    New
                   </button>
                 </li>
               </ul>
@@ -89,7 +99,7 @@ export default function Tasks({ tasks }: { tasks: Itask[] }) {
         </header>
         <main className="h-[45vh] overflow-scroll no-scrollbar">
           {tasks &&
-            tasks.map((task) => (
+            tasksToRender.map((task) => (
               <Task
                 key={task.id}
                 task={task}

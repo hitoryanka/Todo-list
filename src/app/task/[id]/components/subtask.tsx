@@ -40,7 +40,6 @@ export default function Subtask({ task, removeTask }: Props) {
       deleteSubtask(task.id);
     }
   }
-  // BUG put this function into utils folder
   function handleKeyPress(key: string) {
     if (key === 'Escape' || key === 'Enter') {
       setIsEditing(false);
@@ -128,8 +127,8 @@ interface DescriptionProps {
 
 function Description({ isDone, children }: DescriptionProps) {
   return isDone ? (
-    <p className="text-gray-400 line-through break-words">{children}</p>
+    <p className="text-gray-400 line-through break-all">{children}</p>
   ) : (
-    <p>{children}</p>
+    <p className="break-all">{children}</p>
   );
 }

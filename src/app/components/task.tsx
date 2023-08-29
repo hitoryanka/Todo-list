@@ -12,6 +12,7 @@ import deleteTaskWhitePNG from '../images/x-white.png';
 
 import {
   Itask,
+  Status,
   useDeleteTaskMutation,
 } from '@/redux-toolkit/features/api/tasksApiSlice';
 import { useGetSubtasksQuery } from '@/redux-toolkit/features/api/subtasksApiSlice';
@@ -46,8 +47,10 @@ export default function Task({ task }: Props) {
     <article
       onMouseOver={onHover}
       onMouseLeave={onHoverOff}
-      className=" h-20 my-1 pr-5 bg-gray-100 rounded-[25px] flex justify-between place-items-center
-          hover:bg-black hover:text-white hover:fill-white"
+      className={`h-20 my-1 pr-5 ${
+        task.status === Status.done ? 'bg-gray-50 text-gray-400' : 'bg-gray-100'
+      } rounded-[25px] flex justify-between place-items-center
+          hover:bg-black hover:text-white hover:fill-white`}
     >
       <Link
         href={{

@@ -1,12 +1,10 @@
 import Link from 'next/link';
 import { useContext, useRef } from 'react';
-import { useDispatch } from 'react-redux';
 import { context } from '../page';
 import { handleDropDown } from '@/lib/utils';
-import { updateTaskStatus } from '@/redux-toolkit/features/tasks/taskSlice';
-import { Status } from '@/lib/initialTasks';
 import {
   Itask,
+  Status,
   useUpdateTaskMutation,
 } from '@/redux-toolkit/features/api/tasksApiSlice';
 
@@ -48,7 +46,7 @@ export default function TaskNav() {
           {status}
         </button>
         <section
-          // BUG there is better way to position dropdown rather than ise "translate-x"
+          // BUG there is better way to position dropdown rather than use "translate-x"
           className="absolute bg-white translate-x-[27px] w-28 transition opacity-0 pointer-events-none duration-200 shadow-lg right-[20px]"
           ref={ref}
         >
