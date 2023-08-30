@@ -11,9 +11,9 @@ import { useGetTasksQuery } from '@/redux-toolkit/features/api/tasksApiSlice';
 export default function Home() {
   const { data: tasks, isLoading, isError, isSuccess } = useGetTasksQuery();
   if (isLoading) {
-    return <p>loading...</p>
+    return <p>loading...</p>;
   } else if (isError) {
-    return <p>Error!!!</p>
+    return <p>Error!!!</p>;
   } else if (isSuccess) {
     return (
       <main className="flex justify-center">
@@ -23,10 +23,9 @@ export default function Home() {
             notifyBell={notifyBell}
           />
           {isSuccess && <TasksCounter tasks={tasks} />}
-          <Tasks
-            tasks={tasks}
-          />
+          <Tasks tasks={tasks} />
         </div>
       </main>
-  );
-}}
+    );
+  }
+}

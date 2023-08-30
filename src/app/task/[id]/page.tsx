@@ -10,7 +10,7 @@ import {
   Itask,
 } from '@/redux-toolkit/features/api/tasksApiSlice';
 
-export const context = createContext<{
+export const Context = createContext<{
   task: Itask;
   setTask: Function;
   subtasks: Isubtask[];
@@ -50,10 +50,10 @@ export default function Page({
   } else if (isSuccess) {
     return (
       <article className="flex-1 flex-col h-full font-light">
-        <context.Provider value={{ task, setTask, subtasks }}>
+        <Context.Provider value={{ task, setTask, subtasks }}>
           <TaskHeader />
           <TaskSubtasks />
-        </context.Provider>
+        </Context.Provider>
       </article>
     );
   }

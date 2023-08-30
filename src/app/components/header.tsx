@@ -1,4 +1,6 @@
-import Image, { StaticImageData } from "next/image";
+'use client';
+
+import Image, { StaticImageData } from 'next/image';
 
 export default function Header({
   profilePic,

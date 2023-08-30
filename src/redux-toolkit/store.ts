@@ -1,5 +1,4 @@
 'use client';
-
 import { configureStore } from '@reduxjs/toolkit';
 import { TasksApiSlice } from './features/api/tasksApiSlice';
 import { SubtasksApiSlice } from './features/api/subtasksApiSlice';

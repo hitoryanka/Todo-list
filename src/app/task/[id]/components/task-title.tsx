@@ -1,9 +1,11 @@
+'use client';
+
 import Image from 'next/image';
 import importantStatic from '../../../images/important-fire-static.png';
 import importantOutline from '../../../images/important-fire-outline.png';
 import editPNG from '../../../images/editWhite.png';
 import { useContext, useState } from 'react';
-import { context } from '../page';
+import { Context } from '../page';
 import {
   Itask,
   useUpdateTaskMutation,
@@ -13,7 +15,7 @@ export default function TaskTitle() {
   const {
     task: { important, title, id },
     setTask,
-  } = useContext(context);
+  } = useContext(Context);
   const [isImportant, setIsImportant] = useState(important);
   const [isTitleEditing, setIsTitleEditing] = useState(false);
   const [taskTitle, setTaskTitle] = useState(title);

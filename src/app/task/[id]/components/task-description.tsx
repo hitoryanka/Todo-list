@@ -1,5 +1,7 @@
+'use client';
+
 import { useContext, useState } from 'react';
-import { context } from '../page';
+import { Context } from '../page';
 import editPNG from '../../../images/editGrey.png';
 import Image from 'next/image';
 import {
@@ -11,7 +13,7 @@ export default function Description() {
   const {
     task: { description, id },
     setTask,
-  } = useContext(context);
+  } = useContext(Context);
   const [taskDescription, setTaskDescription] = useState(description);
   const [isDescriptionEditing, setIsDescriptionEditing] = useState(false);
   const [updateTask] = useUpdateTaskMutation();

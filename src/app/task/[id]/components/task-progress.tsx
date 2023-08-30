@@ -1,7 +1,7 @@
 'use client';
 
-import { useContext, useEffect, useState } from 'react';
-import { context } from '../page';
+import { useContext, useEffect } from 'react';
+import { Context } from '../page';
 import {
   Itask,
   Status,
@@ -15,7 +15,7 @@ export default function TaskProgress() {
     task: { id, status },
     setTask,
     subtasks,
-  } = useContext(context);
+  } = useContext(Context);
 
   const progress = calculateProgress(subtasks);
 

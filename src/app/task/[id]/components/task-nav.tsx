@@ -1,6 +1,8 @@
+'use client';
+
 import Link from 'next/link';
 import { useContext, useRef } from 'react';
-import { context } from '../page';
+import { Context } from '../page';
 import { handleDropDown } from '@/lib/utils';
 import {
   Itask,
@@ -13,7 +15,7 @@ export default function TaskNav() {
   const {
     task: { id, status },
     setTask,
-  } = useContext(context);
+  } = useContext(Context);
 
   const ref = useRef<HTMLElement>(null);
 
