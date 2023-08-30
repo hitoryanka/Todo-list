@@ -49,12 +49,12 @@ export default function Page({
     return <p>loading...</p>;
   } else if (isSuccess) {
     return (
-      <context.Provider value={{ task, setTask, subtasks }}>
-        <article className="flex-1 flex-col h-full font-light">
+      <article className="flex-1 flex-col h-full font-light">
+        <context.Provider value={{ task, setTask, subtasks }}>
           <TaskHeader />
           <TaskSubtasks />
-        </article>
-      </context.Provider>
+        </context.Provider>
+      </article>
     );
   }
 }
