@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useState } from 'react';
+import { SetStateAction, createContext, useState } from 'react';
 import TaskSubtasks from './components/task-subtasks';
 import TaskHeader from './components/task';
 import { useGetSubtasksQuery } from '@/redux-toolkit/features/api/subtasksApiSlice';
@@ -8,6 +8,7 @@ import {
   Isubtask,
   Status,
   Itask,
+  useGetSingleTaskQuery,
 } from '@/redux-toolkit/features/api/tasksApiSlice';
 
 export const Context = createContext<{
