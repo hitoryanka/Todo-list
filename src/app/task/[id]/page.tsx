@@ -6,12 +6,16 @@ import { PageContent } from './components/pageContent';
 import { useState } from 'react';
 
 export default function Page({
-  params,
-  searchParams,
+  params = null,
+  searchParams = null,
 }: {
-  params: { id: string };
-  searchParams: { task: string };
+  params: { id: string } | null;
+  searchParams: { task: string } | null;
 }) {
+  if (params === null || searchParams === null) {
+    return <p>There's nothing torender.</p>;
+  }
+
   const [task, setTask] = useState<Itask>(JSON.parse(searchParams.task));
 
   const {
