@@ -5,11 +5,11 @@ import importantStatic from '../../../images/important-fire-static.png';
 import importantOutline from '../../../images/important-fire-outline.png';
 import editPNG from '../../../images/editWhite.png';
 import { useContext, useState } from 'react';
-import { Context } from '../page';
 import {
   Itask,
   useUpdateTaskMutation,
 } from '@/redux-toolkit/features/api/tasksApiSlice';
+import { Context } from './pageContent';
 
 export default function TaskTitle() {
   const {

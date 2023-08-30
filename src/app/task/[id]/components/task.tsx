@@ -4,8 +4,8 @@ import TaskNav from './task-nav';
 import TaskProgress from './task-progress';
 import TaskTitle from './task-title';
 import Description from './task-description';
-import { Context } from '../page';
 import { useContext } from 'react';
+import { Context } from './pageContent';
 
 export default function TaskHeader() {
   const { subtasks } = useContext(Context);

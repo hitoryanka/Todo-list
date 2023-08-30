@@ -1,31 +1,9 @@
 'use client';
 
-import { createContext, useState } from 'react';
-import TaskSubtasks from './components/task-subtasks';
-import TaskHeader from './components/task';
 import { useGetSubtasksQuery } from '@/redux-toolkit/features/api/subtasksApiSlice';
-import {
-  Isubtask,
-  Status,
-  Itask,
-} from '@/redux-toolkit/features/api/tasksApiSlice';
-
-export const Context = createContext<{
-  task: Itask;
-  setTask: Function;
-  subtasks: Isubtask[];
-}>({
-  task: {
-    id: 0,
-    title: "doesn't exist",
-    status: Status.inProcess,
-    date: 'none',
-    description: 'none',
-    important: false,
-  },
-  setTask: () => {},
-  subtasks: [],
-});
+import { Itask } from '@/redux-toolkit/features/api/tasksApiSlice';
+import { PageContent } from './components/pageContent';
+import { useState } from 'react';
 
 export default function Page({
   params,
@@ -50,10 +28,11 @@ export default function Page({
   } else if (isSuccess) {
     return (
       <article className="flex-1 flex-col h-full font-light">
-        <Context.Provider value={{ task, setTask, subtasks }}>
-          <TaskHeader />
-          <TaskSubtasks />
-        </Context.Provider>
+        <PageContent
+          task={task}
+          setTask={setTask}
+          subtasks={subtasks}
+        />
       </article>
     );
   }

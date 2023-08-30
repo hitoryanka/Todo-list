@@ -1,13 +1,13 @@
 'use client';
 
 import { useContext, useEffect } from 'react';
-import { Context } from '../page';
 import {
   Itask,
   Status,
   useUpdateTaskMutation,
 } from '@/redux-toolkit/features/api/tasksApiSlice';
 import { calculateProgress } from '@/lib/utils';
+import { Context } from './pageContent';
 
 export default function TaskProgress() {
   const [updateTask] = useUpdateTaskMutation();

@@ -6,11 +6,11 @@ import Subtask from './subtask';
 import { useContext, useRef, useState, useMemo } from 'react';
 import Image from 'next/image';
 import { handleDropDown } from '@/lib/utils';
-import { Context } from '../page';
 import {
   useAddSubtaskMutation,
   useDeleteSubtaskMutation,
 } from '@/redux-toolkit/features/api/subtasksApiSlice';
+import { Context } from './pageContent';
 
 export default function TaskSubtasks() {
   const ref = useRef<HTMLElement>(null);

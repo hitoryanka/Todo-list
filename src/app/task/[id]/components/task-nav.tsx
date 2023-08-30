@@ -2,13 +2,13 @@
 
 import Link from 'next/link';
 import { useContext, useRef } from 'react';
-import { Context } from '../page';
 import { handleDropDown } from '@/lib/utils';
 import {
   Itask,
   Status,
   useUpdateTaskMutation,
 } from '@/redux-toolkit/features/api/tasksApiSlice';
+import { Context } from './pageContent';
 
 export default function TaskNav() {
   const [updateTask] = useUpdateTaskMutation();
