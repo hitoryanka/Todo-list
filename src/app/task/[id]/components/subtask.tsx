@@ -15,10 +15,9 @@ import {
 
 interface Props {
   task: Isubtask;
-  removeTask: Function;
 }
 
-export default function Subtask({ task, removeTask }: Props) {
+export default function Subtask({ task }: Props) {
   const [isEditing, setIsEditing] = useState(false);
   const [currentTitle, setCurrentTitle] = useState(task.title);
 
@@ -80,6 +79,7 @@ export default function Subtask({ task, removeTask }: Props) {
           ) : (
             <textarea
               onBlur={handleBlur}
+              rows={1}
               value={currentTitle}
               onChange={({ target }) => handleTaskTitleChange(target)}
               onKeyDown={(event) => handleKeyPress(event.key)}

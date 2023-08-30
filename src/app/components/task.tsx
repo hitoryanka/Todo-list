@@ -67,6 +67,7 @@ export default function Task({ task }: Props) {
             <Title
               important={important}
               imageUrl={fireUrl}
+              isDone={task.status === Status.done}
             >
               {title}
             </Title>
@@ -110,11 +111,19 @@ function Title({
   important,
   children,
   imageUrl,
+  isDone,
 }: {
   important: boolean;
   children: string;
   imageUrl: StaticImageData;
+  isDone: boolean;
 }) {
+  function handleTrim() {
+    if (children.at(24)?.toLowerCase() !== children.at(24)?.toUpperCase()) {
+      return `${children.slice(0, 23)}...`;
+    }
+    return `${children.slice(0, 24)}...`;
+  }
   return (
     <div className="flex space-x-2">
       {important && (
@@ -126,11 +135,9 @@ function Title({
           height={40}
         />
       )}
-      <h3 className="text-2xl self-center">
+      <h3 className={`text-2xl self-center ${isDone && 'line-through'}`}>
         {/* TODO make a function that will check for punctuation symbols at the end */}
-        {children.length > 24
-          ? `${children.slice(0, 24).trimEnd()}...`
-          : children}
+        {children.length > 24 ? handleTrim() : children}
       </h3>
     </div>
   );

@@ -14,18 +14,18 @@ export default function Tasks({ tasks }: { tasks: Itask[] }) {
 
   const ref = useRef<HTMLElement>(null);
   const [filter, setFilter] = useState<
-    'all' | 'important' | 'done' | 'pending'
-  >('all');
+    'All' | 'Important' | 'Completed' | 'Pending'
+  >('All');
 
   const tasksToRender = useMemo(() => {
     switch (filter) {
-      case 'all':
+      case 'All':
         return tasks;
-      case 'pending':
+      case 'Pending':
         return [...tasks].filter((task) => task.status === Status.inProcess);
-      case 'done':
+      case 'Completed':
         return [...tasks].filter((task) => task.status === Status.done);
-      case 'important':
+      case 'Important':
         return [...tasks].filter((task) => task.important);
     }
   }, [filter, tasks]);
@@ -35,7 +35,7 @@ export default function Tasks({ tasks }: { tasks: Itask[] }) {
       <CreateTask />
       <div className="flex-row bg-white rounded-[40px]  px-8 py-5">
         <header className="flex justify-between items-center">
-          <h2 className="text-4xl font-light">Tasks</h2>
+          <h2 className="text-4xl font-light">{filter} Tasks</h2>
           <div
             className="flex flex-col justify-center gap-3 relative"
             onMouseEnter={({ type }) => handleDropDown(type, ref)}
@@ -61,7 +61,7 @@ export default function Tasks({ tasks }: { tasks: Itask[] }) {
                   <button
                     className="mx-1"
                     type="button"
-                    onClick={() => setFilter('important')}
+                    onClick={() => setFilter('Important')}
                   >
                     Important
                   </button>
@@ -70,7 +70,7 @@ export default function Tasks({ tasks }: { tasks: Itask[] }) {
                   <button
                     className="mx-1"
                     type="button"
-                    onClick={() => setFilter('all')}
+                    onClick={() => setFilter('All')}
                   >
                     All
                   </button>
@@ -79,7 +79,7 @@ export default function Tasks({ tasks }: { tasks: Itask[] }) {
                   <button
                     className="mx-1"
                     type="button"
-                    onClick={() => setFilter('pending')}
+                    onClick={() => setFilter('Pending')}
                   >
                     Pending
                   </button>
@@ -88,9 +88,9 @@ export default function Tasks({ tasks }: { tasks: Itask[] }) {
                   <button
                     className="mx-1"
                     type="button"
-                    onClick={() => setFilter('done')}
+                    onClick={() => setFilter('Completed')}
                   >
-                    Done
+                    Completed
                   </button>
                 </li>
               </ul>

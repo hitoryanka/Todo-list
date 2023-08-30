@@ -107,7 +107,6 @@ export default function TaskSubtasks() {
               <Subtask
                 task={t}
                 key={t.id}
-                removeTask={() => deleteSubtask(t.id)}
               />
             );
           })}
