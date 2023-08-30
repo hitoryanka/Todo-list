@@ -8,7 +8,6 @@ import {
   Isubtask,
   Status,
   Itask,
-  useGetSingleTaskQuery,
 } from '@/redux-toolkit/features/api/tasksApiSlice';
 
 export const Context = createContext<{
