@@ -1,5 +1,5 @@
 import supabase from '@/app/supabase';
-import { Status } from '@/lib/initialTasks';
+import { Status } from '@/redux-toolkit/features/api/tasksApiSlice';
 import { NextResponse } from 'next/server';
 
 export default async function handlePatch(
