@@ -5,17 +5,15 @@ import { Itask } from '@/redux-toolkit/features/api/tasksApiSlice';
 import { PageContent } from './components/pageContent';
 import { useState } from 'react';
 
-export default function Page({
-  params = null,
-  searchParams = null,
-}: {
-  params: { id: string } | null;
-  searchParams: { task: string } | null;
-}) {
-  if (params === null || searchParams === null) {
-    return <p>There's nothing torender.</p>;
-  }
+export const dynamic = 'force-dynamic';
 
+export default function Page({
+  params,
+  searchParams,
+}: {
+  params: { id: string };
+  searchParams: { task: string };
+}) {
   const [task, setTask] = useState<Itask>(JSON.parse(searchParams.task));
 
   const {
