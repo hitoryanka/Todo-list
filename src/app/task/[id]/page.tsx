@@ -3,9 +3,9 @@
 import { useGetSubtasksQuery } from '@/redux-toolkit/features/api/subtasksApiSlice';
 import { Itask } from '@/redux-toolkit/features/api/tasksApiSlice';
 import { PageContent } from './components/pageContent';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
-export const dynamic = 'force-dynamic';
+// export const dynamic = 'force-dynamic';
 
 export default function Page({
   params,
@@ -14,7 +14,7 @@ export default function Page({
   params: { id: string };
   searchParams: { task: string };
 }) {
-  const [task, setTask] = useState<Itask>(JSON.parse(searchParams.task));
+  const [task, setTask] = useState<Itask | null>(null);
 
   const {
     data: subtasks,
@@ -23,11 +23,17 @@ export default function Page({
     isSuccess,
   } = useGetSubtasksQuery(+params.id);
 
-  if (isError) {
-    return <h1 className="text-white">no such task</h1>;
-  } else if (isLoading) {
+  useEffect(() => {
+    setTask(JSON.parse(searchParams.task));
+  }, []);
+
+  if (isLoading) {
     return <p>loading...</p>;
-  } else if (isSuccess) {
+  }
+  if (isError || !task) {
+    return <h1 className="text-white">no such task</h1>;
+  }
+  if (isSuccess) {
     return (
       <article className="flex-1 flex-col h-full font-light">
         <PageContent
@@ -37,5 +43,7 @@ export default function Page({
         />
       </article>
     );
+  } else {
+    return null;
   }
 }
