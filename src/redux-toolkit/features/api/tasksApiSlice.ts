@@ -26,7 +26,9 @@ export interface Isubtask {
 
 export const TasksApiSlice = createApi({
   reducerPath: 'tasksApi',
-  baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:3000/api' }),
+  baseQuery: fetchBaseQuery({
+    baseUrl: 'https://next-todolist.netlify.app/api',
+  }),
   tagTypes: ['tasks'],
   endpoints: (builder) => ({
     // BUG I pass response type into generic but it's still unknown in
