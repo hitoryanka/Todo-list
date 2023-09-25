@@ -83,7 +83,7 @@ export default function Task({ task }: Props) {
             className="flex flex-col place-items-center pr-4"
           >
             {/* TODO how to change svg color?? */}
-            <img
+            <Image
               className=""
               src={detailsUrl.src}
               alt="see task"

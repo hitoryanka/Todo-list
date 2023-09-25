@@ -5,8 +5,6 @@ import { Itask } from '@/redux-toolkit/features/api/tasksApiSlice';
 import { PageContent } from './components/pageContent';
 import { useEffect, useState } from 'react';
 
-// export const dynamic = 'force-dynamic';
-
 export default function Page({
   params,
   searchParams,
