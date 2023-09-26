@@ -37,9 +37,9 @@ export default function TaskProgress() {
       <h2 className="text-gray-300 mb-6">
         {subtasks.filter((t) => t.done).length}/{subtasks.length} subtasks done
       </h2>
-      <div className="relative flex bg-gray-700 rounded-2xl w-full h-10">
+      <div className="relative flex bg-gray-700 rounded-lg md:rounded-2xl w-full h-10">
         <div
-          className="rounded-2xl bg-yellow-300"
+          className="rounded-lg md:rounded-2xl bg-yellow-300"
           // Tailwind css doesn't support dynamic classNames
           style={{ width: `${progress}%` }}
         ></div>

@@ -51,8 +51,8 @@ export default function TaskTitle() {
   }
 
   return (
-    <header className="flex justify-between mr-10">
-      <section className="flex grow text-white text-[42px]">
+    <header className="flex justify-around md:mr-10">
+      <section className="flex grow">
         <button
           type="button"
           className="shrink-0 self-start flex"
@@ -65,7 +65,7 @@ export default function TaskTitle() {
           />
         </button>
 
-        <h1 className="grow leading-10 break-all">
+        <h1 className="grow break-all text-white text-2xl md:text-[42px] md:leading-10">
           {isTitleEditing ? (
             <textarea
               rows={1}

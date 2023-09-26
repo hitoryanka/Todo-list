@@ -6,10 +6,7 @@ import Subtask from './subtask';
 import { useContext, useRef, useState, useMemo } from 'react';
 import Image from 'next/image';
 import { handleDropDown } from '@/lib/utils';
-import {
-  useAddSubtaskMutation,
-  useDeleteSubtaskMutation,
-} from '@/redux-toolkit/features/api/subtasksApiSlice';
+import { useAddSubtaskMutation } from '@/redux-toolkit/features/api/subtasksApiSlice';
 import { Context } from './pageContent';
 
 export default function TaskSubtasks() {
@@ -33,7 +30,6 @@ export default function TaskSubtasks() {
   }, [filter, subtasks]);
 
   const [addSubtask] = useAddSubtaskMutation();
-  const [deleteSubtask] = useDeleteSubtaskMutation();
 
   function handleAddSubtask() {
     // TODO make task pagination by making side-scrollable table of tasks
@@ -42,7 +38,7 @@ export default function TaskSubtasks() {
   }
 
   return (
-    <section className="relative flex flex-col justify-between mx-2 bg-white rounded-3xl mt-40">
+    <section className="relative flex flex-col justify-between mx-2 bg-white rounded-xl md:rounded-3xl mt-40">
       <div>
         <nav className="flex justify-between">
           <h2 className="text-3xl mx-1 md:mx-5 mt-5">All subtasks</h2>
@@ -66,7 +62,7 @@ export default function TaskSubtasks() {
               className="absolute bg-white translate-x-[-5px] transition opacity-0 duration-200 border rounded-md shadow-lg right-[20px] pointer-events-none"
               ref={ref}
             >
-              <ul className="text-center w-full">
+              <ul className="text-center">
                 <li className="hover:bg-blue-600 active:bg-blue-400 rounded-t-md">
                   <button
                     className="mx-1"
@@ -101,7 +97,7 @@ export default function TaskSubtasks() {
             </section>
           </div>
         </nav>
-        <ul className="flex flex-col gap-3 mt-5 px-10 h-[45vh]">
+        <ul className="flex flex-col gap-3 mt-5 px-2 md:px-10 h-[45vh]">
           {subtasksToRender.map((t) => {
             return (
               <Subtask

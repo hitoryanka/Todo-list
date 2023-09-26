@@ -11,7 +11,7 @@ export default function TaskHeader() {
   const { subtasks } = useContext(Context);
 
   return (
-    <section className="mt-5 mx-3 px-5">
+    <section className="mt-5 md:mx-3 px-3 md:px-5">
       <TaskNav />
       <main>
         <TaskTitle />

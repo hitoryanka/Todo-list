@@ -56,7 +56,7 @@ export default function Subtask({ task }: Props) {
   }
 
   return (
-    <li className="flex align-middle justify-between text-2xl">
+    <li className="flex justify-between">
       <div className="flex grow gap-3">
         <div className="flex">
           <input
@@ -69,11 +69,11 @@ export default function Subtask({ task }: Props) {
           <label
             ref={ref}
             htmlFor={task.id.toString()}
-            className="inline-block rounded-full w-7 h-7 self-center"
+            className="inline-block rounded-full w-7 h-7 self-start mt-1"
           />
         </div>
         {/* TODO crossing out animation */}
-        <h2 className="grow w-full self-start">
+        <h2 className="grow w-full self-start text-xl md:text-2xl">
           {!isEditing ? (
             <Description isDone={task.done}>{currentTitle}</Description>
           ) : (

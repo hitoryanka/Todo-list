@@ -58,7 +58,7 @@ export default function Description() {
           </p>
         )}
         <button
-          className="text-white mx-[44px] shrink-0 self-start"
+          className="text-white md:mx-[44px] shrink-0 self-start"
           onClick={() => setIsDescriptionEditing((prevState) => !prevState)}
         >
           <Image
