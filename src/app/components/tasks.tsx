@@ -31,11 +31,11 @@ export default function Tasks({ tasks }: { tasks: Itask[] }) {
   }, [filter, tasks]);
 
   return (
-    <main className="w-90 mx-5 mt-1">
+    <main className="mx-1 md:mx-5 mt-1">
       <CreateTask />
-      <div className="flex-row bg-white rounded-[40px]  px-8 py-5">
-        <header className="flex justify-between items-center">
-          <h2 className="text-4xl font-light">{filter} Tasks</h2>
+      <div className="bg-white rounded-2xl md:rounded-[40px] px-2 md:px-8 py-5">
+        <header className="flex justify-between items-center px-3">
+          <h2 className="text-3xl md:text-4xl font-light">{filter} Tasks</h2>
           <div
             className="flex flex-col justify-center gap-3 relative"
             onMouseEnter={({ type }) => handleDropDown(type, ref)}

@@ -10,7 +10,7 @@ export default function Header({
   notifyBell: string;
 }) {
   return (
-    <header className="w-90 mx-5 bg-white rounded-[40px]  px-8 py-5 flex justify-between">
+    <header className="w-90 mx-1 md:mx-5 bg-white rounded-2xl md:rounded-[40px] mt-1  px-8 py-5 flex justify-between">
       <div className="flex space-x-3">
         <Image
           className="rounded-full w-[60px]"

@@ -49,7 +49,7 @@ export default function Task({ task }: Props) {
       onMouseLeave={onHoverOff}
       className={`h-20 my-1 pr-5 ${
         task.status === Status.done ? 'bg-gray-50 text-gray-400' : 'bg-gray-100'
-      } rounded-[25px] flex justify-between place-items-center
+      } rounded-xl md:rounded-[25px] flex justify-between place-items-center
           hover:bg-black hover:text-white hover:fill-white`}
     >
       <Link
@@ -72,7 +72,7 @@ export default function Task({ task }: Props) {
               {title}
             </Title>
             {isSuccess && subtasks.length !== 0 && (
-              <span className="text-lg text-gray-400">
+              <span className="md:text-lg text-gray-400">
                 {subtasks.length} {`subtask${subtasks.length !== 1 ? 's' : ''}`}
               </span>
             )}
@@ -84,20 +84,25 @@ export default function Task({ task }: Props) {
           >
             {/* TODO how to change svg color?? */}
             <Image
-              className=""
+              className="md:w-[25px] md:h-[25px]"
               src={detailsUrl.src}
               alt="see task"
-              width={20}
+              width={15}
+              height={15}
             />
-            <span>{new Date(date).toLocaleDateString()}</span>
+            <span className="text-sm md:text-base">
+              {new Date(date).toLocaleDateString()}
+            </span>
           </button>
         </div>
       </Link>
       <button
+        className="shrink-0"
         type="button"
         onClick={() => deleteTask(id)}
       >
         <Image
+          className="w-[17px] md:w-[22px]"
           src={deleteUrl}
           alt="delete"
           width={22}
@@ -118,26 +123,24 @@ function Title({
   imageUrl: StaticImageData;
   isDone: boolean;
 }) {
-  function handleTrim() {
-    if (children.at(24)?.toLowerCase() !== children.at(24)?.toUpperCase()) {
-      return `${children.slice(0, 23)}...`;
-    }
-    return `${children.slice(0, 24)}...`;
-  }
   return (
-    <div className="flex space-x-2">
+    <div className="flex space-x-2 max-w-[200px] md:max-w-[385px]">
       {important && (
         <Image
-          className="self-start"
+          className="self-start w-[30px] md:w-[40px]"
           src={imageUrl.src}
           alt="important"
           width={40}
           height={40}
         />
       )}
-      <h3 className={`text-2xl self-center ${isDone && 'line-through'}`}>
+      <h3
+        className={`text-xl md:text-2xl self-center truncate  ${
+          isDone && 'line-through'
+        }`}
+      >
         {/* TODO make a function that will check for punctuation symbols at the end */}
-        {children.length > 24 ? handleTrim() : children}
+        {children}
       </h3>
     </div>
   );

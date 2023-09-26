@@ -27,7 +27,7 @@ export interface Isubtask {
 export const TasksApiSlice = createApi({
   reducerPath: 'tasksApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'https://next-todolist.netlify.app/api',
+    baseUrl: '/api',
   }),
   tagTypes: ['tasks'],
   endpoints: (builder) => ({

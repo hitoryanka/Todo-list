@@ -45,7 +45,7 @@ export default function TaskSubtasks() {
     <section className="relative flex flex-col justify-between mx-2 bg-white rounded-3xl mt-40">
       <div>
         <nav className="flex justify-between">
-          <h2 className="text-3xl mx-5 mt-5">All subtasks</h2>
+          <h2 className="text-3xl mx-1 md:mx-5 mt-5">All subtasks</h2>
           <div
             className="mx-10 mt-5"
             onMouseEnter={({ type }) => handleDropDown(type, ref)}

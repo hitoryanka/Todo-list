@@ -6,8 +6,8 @@ import { Itask, Status } from '@/redux-toolkit/features/api/tasksApiSlice';
 
 export default function TasksCounter({ tasks }: { tasks: Itask[] }) {
   return (
-    <div className="w-90 mx-5 mt-1 bg-yellow-300 rounded-[40px] flex justify-around">
-      <span className="text-[180px] font-bold">
+    <div className="w-90 mx-1 md:mx-5 mt-1 bg-yellow-300 rounded-2xl md:rounded-[40px] flex justify-around">
+      <span className="text-[110px] md:text-[180px] font-bold">
         {[...tasks].filter((task) => task.status === Status.done).length}
       </span>
       <div className="self-center flex-row">

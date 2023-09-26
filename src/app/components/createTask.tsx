@@ -25,7 +25,7 @@ export default function CreateTask() {
   }
 
   return (
-    <div className="flex justify-between bg-blue-500 rounded-[40px] text-2xl  px-8 py-5 mb-1">
+    <div className="flex justify-between bg-blue-500 rounded-2xl md:rounded-[40px] text-2xl px-1  md:px-8 py-5 mb-1">
       <textarea
         rows={1}
         value={title}
@@ -34,14 +34,15 @@ export default function CreateTask() {
         onFocus={({ target }) =>
           (target.style.height = `${target.scrollHeight}px`)
         }
-        className="resize-none overflow-hidden w-full rounded-3xl p-2"
+        className="resize-none overflow-hidden w-full rounded-2xl md:rounded-3xl p-2"
         placeholder="Start typing..."
       ></textarea>
       <button
-        className="ml-5"
+        className="ml-1 md:ml-5"
         onClick={handleTitleSubmit}
       >
         <Image
+          className="w-[28px] md:w-[38px]"
           src={addTaskPNG}
           alt="add task"
           width={38}
